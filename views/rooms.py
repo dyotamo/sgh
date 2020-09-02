@@ -31,7 +31,6 @@ def room_new():
             flash('Quarto com o número {} já existe.'.format(number), 'danger')
         else:
             data = get_formdata(form)
-            validate_room(data)
             create(Room, **data)
 
             flash('Quarto cadastrado.', 'success')
