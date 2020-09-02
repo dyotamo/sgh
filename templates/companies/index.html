@@ -1,0 +1,40 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    <h1>Cadastro de Empresas <small><a href="{{ url_for('companies.company_new') }}">(+)</small></a></h1>
+
+    {% if companies %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Empresa</th>
+                <th scope="col">NUIT</th>
+                <th scope="col">Ramo</th>
+                <th scope="col">Endereço</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Fax</th>
+                <th scope="col">Celular</th>
+                <th scope="col">Email</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td>{{ company.name }}</td>
+                <td>{{ company.nuit }}</td>
+                <td>{{ company.activity_branch }}</td>
+                <td>{{ company.address }}</td>
+                <td>{{ company.telephone }}</td>
+                <td>{{ company.fax }}</td>
+                <td>{{ company.cellphone }}</td>
+                <td>{{ company.email }}</td>
+                <td><a href="{{ url_for('companies.company_edit', company_id=company.id) }}">Editar</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

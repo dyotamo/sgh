@@ -1,0 +1,27 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    <h1>Novo Quarto</h1>
+
+    {% from "helpers/_form_helpers.html" import render_field %}
+    <form method="POST" action="{{ url_for('rooms.room_new') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ render_field(form.number, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.category, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.status, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.daily_amount, class="form-control") }}
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary btn-block" value="Criar">
+        </div>
+    </form>
+</div>
+{% endblock %}
