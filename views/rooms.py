@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required
+from peewee import IntegrityError
 
 from models import Room
 from dao import get_all, create, get, update
@@ -24,10 +25,13 @@ def room_index():
 def room_new():
     form = RoomForm()
     if form.validate_on_submit():
-        data = get_formdata(form)
-        create(Room, **data)  # TODO validate if room number already exists
-        flash('Yes, quarto cadastrado com sucesso.', 'success')
-        return redirect(url_for('rooms.room_index'))
+        try:
+            data = get_formdata(form)
+            create(Room, **data)  # TODO validate if room number already exists
+            flash('Yes, quarto cadastrado com sucesso.', 'success')
+            return redirect(url_for('rooms.room_index'))
+        except IntegrityError:
+            flash('Oops, este número de quarto já está ocupado.', 'danger')
     return render_template('rooms/new.html', form=form)
 
 

@@ -5,9 +5,8 @@ from flask_login import LoginManager, login_required, login_user, logout_user
 
 from models import User
 from dao import get
-from services.security import check_user
 from forms.login import LoginForm
-from utils.security import allowed_profile
+from utils.security import allowed_profile, check_user
 
 from views import rooms, companies, users, guests
 

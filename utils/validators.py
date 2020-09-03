@@ -26,6 +26,17 @@ def _valid_fax(data: Dict[str, str]):
         raise AttributeError('Oops, o número do fax é inválido.')
 
 
+def _valid_nuit(data):
+    regex = compile('^[1-9][0-9]{8}$')
+    if not regex.match(data['nuit']):
+        raise AttributeError('Oops, o NUIT é inválido.')
+
+
 def validate_company(data: Dict[str, str]):
-    for validator in [_valid_phone, _valid_cell, _valid_fax]:
+    for validator in [_valid_phone, _valid_cell, _valid_fax, _valid_nuit]:
+        validator(data)
+
+
+def validate_guest(data: Dict[str, str]):
+    for validator in [_valid_cell]:
         validator(data)

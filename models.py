@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash as gph
 from flask_login import UserMixin
 from peewee import (SqliteDatabase, Model, CharField, DateTimeField,
                     ForeignKeyField, IntegerField, FloatField, BooleanField)
+
 
 from utils.constants import (PROFILES, GENDERS, CATEGORIES,
                              ROOM_STATUSES, ID_TYPES, MARITAL_STATUSES)
@@ -20,7 +21,8 @@ class User(BaseModel, UserMixin):
     name = CharField(max_length=255)
     email = CharField(max_length=255, unique=True)
     profile = CharField(max_length=50, choices=PROFILES)
-    password = CharField(max_length=255)
+    password = CharField(max_length=255, default=gph(
+        'passwd'))  # TODO remove it later
 
     created_at = DateTimeField(default=datetime.now())
     updated_at = DateTimeField(null=True)
@@ -145,4 +147,4 @@ if __name__ == "__main__":
                       Invoice, Receipt, CheckIn, CheckOut])
 
     User.create(name='Dássone Yotamo', email='dyotamo@gmail.com',
-                profile='admin', password=generate_password_hash('passwd'))
+                profile='admin', password=gph('passwd'))
