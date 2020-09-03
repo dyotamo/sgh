@@ -25,6 +25,7 @@ def user_new():
     form = UserForm()
     if form.validate_on_submit():
         data = get_formdata(form)
+        data['password'] = 'passwd'  # TODO random generate_password_hash
         create(User, **data)
         flash('Yes, usuário cadastrado com sucesso.', 'success')
         return redirect(url_for('users.user_index'))
