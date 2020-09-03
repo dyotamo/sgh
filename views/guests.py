@@ -25,11 +25,14 @@ def guest_index():
 def guest_new():
     form = GuestForm()
     if form.validate_on_submit():
-        data = get_formdata(form)
-        validate_guest(data)
-        create(Guest, **data)
-        flash('Yes, hóspede cadastrado com sucesso.', 'success')
-        return redirect(url_for('guests.guest_index'))
+        try:
+            data = get_formdata(form)
+            validate_guest(data)
+            create(Guest, **data)
+            flash('Yes, hóspede cadastrado com sucesso.', 'success')
+            return redirect(url_for('guests.guest_index'))
+        except AttributeError as e:
+            flash(str(e), 'warning')
     return render_template('guests/new.html', form=form)
 
 
@@ -39,9 +42,12 @@ def guest_new():
 def guest_edit(guest_id: int):
     form = GuestForm(obj=get(Guest, guest_id))
     if form.validate_on_submit():
-        data = get_formdata(form)
-        validate_guest(data)
-        update(Guest, guest_id, **data)
-        flash('Yes, hóspede alterado com sucesso.', 'success')
-        return redirect(url_for('guests.guest_index'))
+        try:
+            data = get_formdata(form)
+            validate_guest(data)
+            update(Guest, guest_id, **data)
+            flash('Yes, hóspede alterado com sucesso.', 'success')
+            return redirect(url_for('guests.guest_index'))
+        except AttributeError as e:
+            flash(str(e), 'warning')
     return render_template('guests/edit.html', form=form)

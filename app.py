@@ -68,7 +68,7 @@ def login():
         user = check_user(email=email, password=password)
 
         if user is None:
-            flash('Credenciais inválidas.', 'danger')
+            flash('Credenciais inválidas.', 'warning')
         else:
             login_user(user)
             flash('Entrou como {}.'.format(user.email), 'success')

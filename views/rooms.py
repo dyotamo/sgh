@@ -31,7 +31,7 @@ def room_new():
             flash('Yes, quarto cadastrado com sucesso.', 'success')
             return redirect(url_for('rooms.room_index'))
         except IntegrityError:
-            flash('Oops, este número de quarto já está ocupado.', 'danger')
+            flash('Oops, este número de quarto já está ocupado.', 'warning')
     return render_template('rooms/new.html', form=form)
 
 

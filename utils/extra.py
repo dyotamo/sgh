@@ -12,7 +12,4 @@ def get_formdata(form: FlaskForm) -> Dict[str, str]:
 
 
 def get_company_tuple():
-    collection = [(str(company.id), company.name)
-                  for company in get_all(Company)]
-    collection.insert(0, ('', 'Nenhuma'))
-    return collection
+    return [(str(company.id), company.name) for company in get_all(Company)]

@@ -32,7 +32,7 @@ def company_new():
             flash('Quarto cadastrado.', 'success')
             return redirect(url_for('companies.company_index'))
         except AttributeError as e:
-            flash(str(e), 'danger')
+            flash(str(e), 'warning')
     return render_template('companies/new.html', form=form)
 
 
@@ -49,5 +49,5 @@ def company_edit(company_id: int):
             flash('Quarto alterado.', 'success')
             return redirect(url_for('companies.company_index'))
         except AttributeError as e:
-            flash(str(e), 'danger')
+            flash(str(e), 'warning')
     return render_template('companies/edit.html', form=form)
