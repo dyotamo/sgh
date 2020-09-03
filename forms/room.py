@@ -13,9 +13,7 @@ class RoomForm(FlaskForm):
     status = SelectField('Status',
                          validators=[REQUIRED],
                          choices=[('available', 'Disponível'),
-                                  ('busy',
-                                   'Ocupado'),
-                                  ('sweeping',
-                                   'Em arrumação'),
+                                  ('busy', 'Ocupado'),
+                                  ('sweeping', 'Em arrumação'),
                                   ('closed', 'Encerrado')])
     daily_amount = FloatField(validators=[REQUIRED])
