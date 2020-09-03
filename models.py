@@ -22,18 +22,23 @@ class User(BaseModel, UserMixin):
     profile = CharField(max_length=50, choices=PROFILES)
     password = CharField(max_length=255)
 
+    created_at = DateTimeField(default=datetime.now())
+    updated_at = DateTimeField(null=True)
+    created_by = ForeignKeyField('self', column_name='created_by', null=True)
+    updated_by = ForeignKeyField('self',  column_name='updated_by', null=True)
+
     def get_profile_label(self):
         return dict(PROFILES)[self.profile]
 
 
-class Creatable(BaseModel):
+class Mutable(BaseModel):
     created_at = DateTimeField(default=datetime.now())
     updated_at = DateTimeField(null=True)
     created_by = ForeignKeyField(User, column_name='created_by', null=True)
     updated_by = ForeignKeyField(User,  column_name='updated_by', null=True)
 
 
-class Company(Creatable):
+class Company(Mutable):
     name = CharField(max_length=255)
     nuit = CharField(max_length=9)
     activity_branch = CharField(max_length=255)
@@ -44,7 +49,7 @@ class Company(Creatable):
     email = CharField(max_length=255)
 
 
-class Guest(Creatable):
+class Guest(Mutable):
     name = CharField(max_length=255)
     id_type = CharField(max_length=10, choices=ID_TYPES)
     id_number = CharField(max_length=50)
@@ -74,7 +79,7 @@ class Guest(Creatable):
         return dict(GENDERS)[self.gender]
 
 
-class Room(Creatable):
+class Room(Mutable):
     number = IntegerField(unique=True)
     category = CharField(max_length=50, choices=CATEGORIES)
     status = CharField(max_length=50, choices=ROOM_STATUSES)
@@ -87,7 +92,7 @@ class Room(Creatable):
         return dict(ROOM_STATUSES)[self.status]
 
 
-class Reservation(Creatable):
+class Reservation(Mutable):
     check_in_time = DateTimeField()
     check_out_time = DateTimeField()
     adult_number = IntegerField()
@@ -96,7 +101,7 @@ class Reservation(Creatable):
     is_active = BooleanField(default=True)
 
 
-class CheckIn(Creatable):
+class CheckIn(Mutable):
     in_date = DateTimeField()
     out_date = DateTimeField()
     room = ForeignKeyField(Room)
@@ -108,7 +113,7 @@ class CheckInGuest(BaseModel):
     check_in = ForeignKeyField(CheckIn)
 
 
-class Expense(Creatable):
+class Expense(Mutable):
     category = CharField(max_length=50, choices=CATEGORIES)
     description = CharField(max_length=255)
     quantity = IntegerField()
@@ -116,7 +121,7 @@ class Expense(Creatable):
     check_in = ForeignKeyField(CheckIn)
 
 
-class CheckOut(Creatable):
+class CheckOut(Mutable):
     out_date = DateTimeField()
     expenses_total = FloatField()
     payment_type = CharField(max_length=50)
@@ -125,12 +130,12 @@ class CheckOut(Creatable):
     is_active = BooleanField(default=True)
 
 
-class Invoice(Creatable):
+class Invoice(Mutable):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
 
 
-class Receipt(Creatable):
+class Receipt(Mutable):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
 
