@@ -9,8 +9,7 @@ from services.security import check_user
 from forms.login import LoginForm
 from utils.security import allowed_profile
 
-from views.rooms import rooms
-from views.companies import companies
+from views import rooms, companies, users, guests
 
 
 app = Flask(__name__)
@@ -18,6 +17,8 @@ app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
 app.register_blueprint(rooms)
 app.register_blueprint(companies)
+app.register_blueprint(users)
+app.register_blueprint(guests)
 
 
 if bool(environ.get('PRODUCTION')):

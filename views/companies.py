@@ -14,23 +14,21 @@ companies = Blueprint('companies', __name__, url_prefix='/companies')
 
 @companies.route('/', methods=['GET'])
 @login_required
-@allowed_profile(['receptionist', 'manager'])
+@allowed_profile(['receptionist', 'manager', 'admin'])
 def company_index():
     return render_template('companies/index.html', companies=get_all(Company))
 
 
 @companies.route('/new', methods=['GET', 'POST'])
 @login_required
-@allowed_profile(['receptionist', 'manager'])
+@allowed_profile(['receptionist', 'manager', 'admin'])
 def company_new():
     form = CompanyForm()
-
     if form.validate_on_submit():
         try:
             data = get_formdata(form)
             validate_company(data)
             create(Company, **data)
-
             flash('Quarto cadastrado.', 'success')
             return redirect(url_for('companies.company_index'))
         except AttributeError as e:
@@ -40,16 +38,14 @@ def company_new():
 
 @companies.route('/<int:company_id>/edit', methods=['GET', 'POST'])
 @login_required
-@allowed_profile(['receptionist', 'manager'])
-def company_edit(company_id):
+@allowed_profile(['receptionist', 'manager', 'admin'])
+def company_edit(company_id: int):
     form = CompanyForm(obj=get(Company, company_id))
-
     if form.validate_on_submit():
         try:
             data = get_formdata(form)
             validate_company(data)
             update(Company, company_id, **data)
-
             flash('Quarto alterado.', 'success')
             return redirect(url_for('companies.company_index'))
         except AttributeError as e:

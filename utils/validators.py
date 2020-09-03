@@ -1,29 +1,31 @@
 from re import compile
+from typing import Dict
 
 from wtforms.validators import DataRequired, Email
 
+
 REQUIRED = DataRequired(message="Campo obrigatório.")
-VALID_EMAIL = Email(message="Email inválido.")
+EMAIL = Email(message="Email inválido.")
 
 
-def _phone_validator(data):
+def _valid_phone(data: Dict[str, str]):
     regex = compile('^\\+258[0-9]{9}$')
     if not regex.match(data['telephone']):
-        raise AttributeError('Telefone inválido')
+        raise AttributeError('Oops, o número do telefone é inválido.')
 
+
+def _valid_cell(data: Dict[str, str]):
+    regex = compile('^\\+258[0-9]{9}$')
     if not regex.match(data['cellphone']):
-        raise AttributeError('Celular inválido')
+        raise AttributeError('Oops, o número do celular é inválido.')
 
+
+def _valid_fax(data: Dict[str, str]):
+    regex = compile('^\\+258[0-9]{9}$')
     if not regex.match(data['fax']):
-        raise AttributeError('Fax inválido')
+        raise AttributeError('Oops, o número do fax é inválido.')
 
 
-def _nuit_validator(data):
-    regex = compile('^[1-9][0-9]{8}$')
-    if not regex.match(data['nuit']):
-        raise AttributeError('Nuit inválido')
-
-
-def validate_company(data):
-    for validator in [_nuit_validator, _phone_validator]:
+def validate_company(data: Dict[str, str]):
+    for validator in [_valid_phone, _valid_cell, _valid_fax]:
         validator(data)

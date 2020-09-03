@@ -1,0 +1,46 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    <h1>Cadastro de Hóspedes <small><a href="{{ url_for('guests.guest_new') }}">(+)</small></a></h1>
+
+    {% if guests %}
+    <div class="table-responsive">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Número</th>
+                    <th scope="col">Endereço</th>
+                    <th scope="col">Idade</th>
+                    <th scope="col">Celular</th>
+                    <th scope="col">Estado Civil</th>
+                    <th scope="col">Nacionalidade</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">Gênero</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for guest in guests %}
+                <tr>
+                    <td>{{ guest.name }}</td>
+                    <td>{{ guest.get_id_type_label() }}</td>
+                    <td>{{ guest.id_number }}</td>
+                    <td>{{ guest.address }}</td>
+                    <td>{{ guest.age }}</td>
+                    <td>{{ guest.cellphone }}</td>
+                    <td>{{ guest.get_marital_status_label() }}</td>
+                    <td>{{ guest.nationality }}</td>
+                    <td>{{ guest.get_company() }}</td>
+                    <td>{{ guest.get_gender_label() }}</td>
+                    <td><a href="{{ url_for('guests.guest_edit', guest_id=guest.id) }}">Editar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

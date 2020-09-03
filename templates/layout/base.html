@@ -26,48 +26,54 @@
 
 <body>
     <div class="sidebar">
-        <a href="{{ url_for('index') }}">SGH</a>
+        <a href="{{ url_for('index') }}">Página Inicial</a>
 
-        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager') %}
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        <a href="#">Pesquisas</a>
+        {% endif %}
+
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#">Reservas</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager') %}
-        <a href="#">Hóspedes</a>
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        <a href="{{ url_for('guests.guest_index') }}">Hóspedes</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager') %}
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="{{ url_for('companies.company_index') }}">Empresas</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager') %}
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#">Check-In</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager') %}
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#">Check-Out</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager') %}
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="{{ url_for('rooms.room_index') }}">Quartos</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager') %}
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#">Despesas</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('admin', 'manager') %}
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#">Relatórios</a>
         {% endif %}
 
-        {% if current_user.is_authenticated and current_user.profile in ('admin', 'manager') %}
-        <a href="#">Usuários</a>
+        {% if current_user.profile in ('admin') %}
+        <a href="{{ url_for('users.user_index') }}">Usuários</a>
         {% endif %}
 
         <hr />
 
+        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#">Definições</a>
         <a href="{{ url_for('logout') }}">Sair</a>
+        {% endif %}
     </div>
 
     <div class="content">
@@ -83,7 +89,16 @@
         {% endif %}
         {% endwith %}
 
-        <div style="padding: 20px;">
+        <div style="padding: 10px">
+            <div class="card card-body bg-light" style="font-weight: bold">
+                <div>
+                    Usuário: {{ current_user.name.title() }}
+                </div>
+                <div>
+                    Perfil: {{ current_user.get_profile_label() }}
+                </div>
+            </div>
+            <hr />
             {% block content %}
             {% endblock %}
         </div>

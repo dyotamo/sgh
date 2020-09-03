@@ -13,6 +13,7 @@ flask-wtf = "*"
 flask-login = "*"
 flask-minify = "*"
 email-validator = "*"
+wtf-peewee = "*"
 
 [requires]
 python_version = "3.6"

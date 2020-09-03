@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import TextField
 
-from utils.validators import REQUIRED, VALID_EMAIL
+from utils.validators import REQUIRED, EMAIL
 
 
 class CompanyForm(FlaskForm):
@@ -12,4 +12,4 @@ class CompanyForm(FlaskForm):
     telephone = TextField('Telefone', validators=[REQUIRED])
     fax = TextField('Fax', validators=[REQUIRED])
     cellphone = TextField('Celular', validators=[REQUIRED])
-    email = TextField('Email', validators=[REQUIRED, VALID_EMAIL])
+    email = TextField('Email', validators=[REQUIRED, EMAIL])

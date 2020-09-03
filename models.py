@@ -2,9 +2,11 @@ from datetime import datetime
 
 from werkzeug.security import generate_password_hash
 from flask_login import UserMixin
-from flask_login import current_user
-from peewee import (SqliteDatabase, Model, CharField,
-                    DateTimeField, ForeignKeyField, IntegerField, FloatField,)
+from peewee import (SqliteDatabase, Model, CharField, DateTimeField,
+                    ForeignKeyField, IntegerField, FloatField, BooleanField)
+
+from utils.constants import (PROFILES, GENDERS, CATEGORIES,
+                             ROOM_STATUSES, ID_TYPES, MARITAL_STATUSES)
 
 db = SqliteDatabase('dev.db')
 
@@ -17,11 +19,11 @@ class BaseModel(Model):
 class User(BaseModel, UserMixin):
     name = CharField(max_length=255)
     email = CharField(max_length=255, unique=True)
-    profile = CharField(max_length=50,
-                        choices=[('admin', 'Administrador'),
-                                 ('receptionist', 'Recepcionista'),
-                                 ('manager', 'Gerente')])
+    profile = CharField(max_length=50, choices=PROFILES)
     password = CharField(max_length=255)
+
+    def get_profile_label(self):
+        return dict(PROFILES)[self.profile]
 
 
 class Creatable(BaseModel):
@@ -44,37 +46,45 @@ class Company(Creatable):
 
 class Guest(Creatable):
     name = CharField(max_length=255)
+    id_type = CharField(max_length=10, choices=ID_TYPES)
     id_number = CharField(max_length=50)
     address = CharField(max_length=255)
     age = IntegerField()
-    cellphone = CharField(max_length=50, null=True)
-    gender = CharField(max_length=10, choices=[('male', 'Masculino'),
-                                               ('female', 'Female'),
-                                               ('other', 'Outro')])
-    father_name = CharField(max_length=255, null=True)
-    mother_name = CharField(max_length=255, null=True)
-    escolarity = CharField(max_length=50, null=True)
+    cellphone = CharField(max_length=50)
+    father_name = CharField(max_length=255)
+    mother_name = CharField(max_length=255)
     marital_status = CharField(max_length=20)
     nationality = CharField(max_length=255)
-    passport = CharField(max_length=20, null=True)
     company = ForeignKeyField(Company, null=True)
+    gender = CharField(max_length=10, choices=GENDERS)
+
+    def get_company(self):
+        try:
+            return self.company.name
+        except Company.DoesNotExist:
+            return 'Nenhuma'
+
+    def get_id_type_label(self):
+        return dict(ID_TYPES)[self.id_type]
+
+    def get_marital_status_label(self):
+        return dict(MARITAL_STATUSES)[self.marital_status]
+
+    def get_gender_label(self):
+        return dict(GENDERS)[self.gender]
 
 
 class Room(Creatable):
-    CATEGORIES = [('single', 'Solteiro'), ('couple', 'Casal')]
-    STATUSES = [('available', 'Disponível'), ('busy', 'Ocupado'),
-                ('sweeping', 'Em arrumação'), ('closed', 'Encerrado')]
-
     number = IntegerField(unique=True)
     category = CharField(max_length=50, choices=CATEGORIES)
-    status = CharField(max_length=50, choices=STATUSES)
+    status = CharField(max_length=50, choices=ROOM_STATUSES)
     daily_amount = FloatField()
 
     def get_category_label(self):
-        return dict(self.CATEGORIES)[self.category]
+        return dict(CATEGORIES)[self.category]
 
     def get_status_label(self):
-        return dict(self.STATUSES)[self.status]
+        return dict(ROOM_STATUSES)[self.status]
 
 
 class Reservation(Creatable):
@@ -83,12 +93,14 @@ class Reservation(Creatable):
     adult_number = IntegerField()
     children_number = IntegerField()
     company_number = CharField(max_length=255)
+    is_active = BooleanField(default=True)
 
 
 class CheckIn(Creatable):
     in_date = DateTimeField()
     out_date = DateTimeField()
     room = ForeignKeyField(Room)
+    is_active = BooleanField(default=True)
 
 
 class CheckInGuest(BaseModel):
@@ -97,7 +109,7 @@ class CheckInGuest(BaseModel):
 
 
 class Expense(Creatable):
-    category = CharField(max_length=50, choices=[])
+    category = CharField(max_length=50, choices=CATEGORIES)
     description = CharField(max_length=255)
     quantity = IntegerField()
     amount = FloatField()
@@ -110,18 +122,22 @@ class CheckOut(Creatable):
     payment_type = CharField(max_length=50)
     dailt_total = IntegerField()
     check_in = ForeignKeyField(CheckIn)
+    is_active = BooleanField(default=True)
 
 
 class Invoice(Creatable):
-    pass
+    is_active = BooleanField(default=True)
+    is_duplicate = BooleanField(default=True)
 
 
 class Receipt(Creatable):
-    pass
+    is_active = BooleanField(default=True)
+    is_duplicate = BooleanField(default=True)
 
 
 if __name__ == "__main__":
     db.create_tables([User, Guest, Company, Room,
                       Invoice, Receipt, CheckIn, CheckOut])
+
     User.create(name='Dássone Yotamo', email='dyotamo@gmail.com',
-                profile='manager', password=generate_password_hash('passwd'))
+                profile='admin', password=generate_password_hash('passwd'))
