@@ -5,7 +5,7 @@ from flask import abort
 from flask_login import current_user
 from peewee import Model, ModelSelect
 
-from models import db
+from models import db, Mutable, User
 
 
 def get(model: Type, id: int) -> Model:
@@ -29,14 +29,16 @@ def get_where(model: Type, **kwargs) -> Model:
 @db.atomic()
 def create(model: Type, **kwargs):
     obj = model.create(**kwargs)
-    obj.created_by = current_user.id
-    obj.save()
+    if isinstance(obj, Mutable) or isinstance(obj, User):
+        obj.created_by = current_user.id
+        obj.save()
 
 
 @db.atomic()
 def update(model: Type, id: int, **kwargs):
     model.update(**kwargs).where(model.id == id).execute()
     obj = get(model, id)
-    obj.updated_by = current_user.id
-    obj.updated_at = datetime.now()
-    obj.save()
+    if isinstance(obj, Mutable) or isinstance(obj, User):
+        obj.updated_by = current_user.id
+        obj.updated_at = datetime.now()
+        obj.save()
