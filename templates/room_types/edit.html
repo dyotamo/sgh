@@ -2,16 +2,13 @@
 
 {% block content %}
 <div>
-    <h3>Alterar Usuário</h3>
+    <h3>Alterar Tipo</h3>
 
     {% from "helpers/_form_helpers.html" import render_field %}
     <form method="POST" action="#">
         {{ form.csrf_token }}
         <div class="form-group">
             {{ render_field(form.name, class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.profile, class="form-control") }}
         </div>
         <div class="form-group">
             <input type="submit" class="btn btn-primary btn-block" value="Alterar">

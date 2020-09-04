@@ -2,14 +2,14 @@
 
 {% block content %}
 <div>
-    <h1>Cadastro de Quartos <small><a href="{{ url_for('rooms.room_new') }}">(+)</small></a></h1>
+    <h3>Cadastro de Quartos <small><a href="{{ url_for('rooms.room_new') }}">(+)</small></a></h3>
 
     {% if rooms %}
     <div class="table-responsive">
-        <table class="table table-borderless">
+        <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Quarto</th>
                     <th scope="col">Categoria</th>
                     <th scope="col">Status</th>
                     <th scope="col">Diária</th>
@@ -20,7 +20,7 @@
                 {% for room in rooms %}
                 <tr>
                     <th scope="row">{{ room.number }}</th>
-                    <td>{{ room.get_category_label() }}</td>
+                    <td>{{ room.category.name }}</td>
                     <td>{{ room.get_status_label() }}</td>
                     <td>{{  "%.2f MT"|format(room.daily_amount) }}</td>
                     <td><a href="{{ url_for('rooms.room_edit', room_id=room.id) }}">Editar</a></td>

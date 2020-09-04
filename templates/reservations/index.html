@@ -1,0 +1,39 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    <h3>Cadastro de Reservas <small><a href="{{ url_for('reservations.reservation_new') }}">(+)</small></a></h3>
+
+    {% if reservations %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Check In</th>
+                    <th scope="col">Check Out</th>
+                    <th scope="col">Adultos</th>
+                    <th scope="col">Crianças</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.check_in_time }}</td>
+                    <td>{{ reservation.check_out_time }}</td>
+                    <td>{{ reservation.adult_number }}</td>
+                    <td>{{ reservation.children_number }}</td>
+                    <td>{{ reservation.company.name }}</td>
+                    <td>{{ reservation.is_active }}</td>
+                    <td><a
+                            href="{{ url_for('reservations.reservation_edit', reservation_id=reservation.id) }}">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

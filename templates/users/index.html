@@ -2,11 +2,11 @@
 
 {% block content %}
 <div>
-    <h1>Cadastro de Usuários <small><a href="{{ url_for('users.user_new') }}">(+)</small></a></h1>
+    <h3>Cadastro de Usuários <small><a href="{{ url_for('users.user_new') }}">(+)</small></a></h3>
 
     {% if users %}
     <div class="table-responsive">
-        <table class="table table-borderless">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Nome</th>

@@ -11,5 +11,5 @@ def get_formdata(form: FlaskForm) -> Dict[str, str]:
     return data
 
 
-def get_company_tuple():
-    return [(str(company.id), company.name) for company in get_all(Company)]
+def get_model_tuple(model):
+    return [(str(obj.id), obj.name) for obj in get_all(model)]

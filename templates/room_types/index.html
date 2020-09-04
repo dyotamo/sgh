@@ -1,0 +1,28 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    <h3>Cadastro de Tipos de Quarto <small><a href="{{ url_for('room_types.room_type_new') }}">(+)</small></a></h3>
+
+    {% if room_types %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Tipo</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for room_type in room_types %}
+                <tr>
+                    <th scope="row">{{ room_type.name }}</th>
+                    <td><a href="{{ url_for('room_types.room_type_edit', room_type_id=room_type.id) }}">Editar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

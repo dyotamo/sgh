@@ -14,14 +14,14 @@ guests = Blueprint('guests', __name__, url_prefix='/guests')
 
 @guests.route('/', methods=['GET'])
 @login_required
-@allowed_profile(['admin'])
+@allowed_profile(['receptionist', 'manager', 'admin'])
 def guest_index():
     return render_template('guests/index.html', guests=get_all(Guest))
 
 
 @guests.route('/new', methods=['GET', 'POST'])
 @login_required
-@allowed_profile(['admin'])
+@allowed_profile(['receptionist', 'manager', 'admin'])
 def guest_new():
     form = GuestForm()
     if form.validate_on_submit():
@@ -38,7 +38,7 @@ def guest_new():
 
 @guests.route('/<int:guest_id>/edit', methods=['GET', 'POST'])
 @login_required
-@allowed_profile(['admin'])
+@allowed_profile(['receptionist', 'manager', 'admin'])
 def guest_edit(guest_id: int):
     form = GuestForm(obj=get(Guest, guest_id))
     if form.validate_on_submit():

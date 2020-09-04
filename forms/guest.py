@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import TextField, SelectField, IntegerField
 
+from models import Company
 from utils.validators import REQUIRED
 from utils.constants import ID_TYPES, GENDERS, MARITAL_STATUSES
-from utils.extra import get_company_tuple
+from utils.extra import get_model_tuple
 
 
 class GuestForm(FlaskForm):
@@ -19,5 +20,5 @@ class GuestForm(FlaskForm):
     marital_status = SelectField('Estado Civil', validators=[
         REQUIRED], choices=MARITAL_STATUSES)
     nationality = TextField('Nacionalidade', validators=[REQUIRED])
-    company = SelectField('Empresa', choices=get_company_tuple())
+    company = SelectField('Empresa', choices=get_model_tuple(Company))
     gender = SelectField('Gênero', choices=GENDERS)

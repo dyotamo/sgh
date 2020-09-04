@@ -8,7 +8,7 @@ from dao import get
 from forms.login import LoginForm
 from utils.security import allowed_profile, check_user
 
-from views import rooms, companies, users, guests
+from views import rooms, companies, users, guests, room_types, reservations
 
 
 app = Flask(__name__)
@@ -18,6 +18,8 @@ app.register_blueprint(rooms)
 app.register_blueprint(companies)
 app.register_blueprint(users)
 app.register_blueprint(guests)
+app.register_blueprint(room_types)
+app.register_blueprint(reservations)
 
 
 if bool(environ.get('PRODUCTION')):

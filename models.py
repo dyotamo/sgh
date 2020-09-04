@@ -81,9 +81,13 @@ class Guest(Mutable):
         return dict(GENDERS)[self.gender]
 
 
+class RoomType(Mutable):
+    name = CharField(max_length=255, unique=True)
+
+
 class Room(Mutable):
     number = IntegerField(unique=True)
-    category = CharField(max_length=50, choices=CATEGORIES)
+    category = ForeignKeyField(RoomType)
     status = CharField(max_length=50, choices=ROOM_STATUSES)
     daily_amount = FloatField()
 
@@ -99,7 +103,7 @@ class Reservation(Mutable):
     check_out_time = DateTimeField()
     adult_number = IntegerField()
     children_number = IntegerField()
-    company_number = CharField(max_length=255)
+    company = ForeignKeyField(Company, null=True)
     is_active = BooleanField(default=True)
 
 
@@ -143,8 +147,8 @@ class Receipt(Mutable):
 
 
 if __name__ == "__main__":
-    db.create_tables([User, Guest, Company, Room,
-                      Invoice, Receipt, CheckIn, CheckOut])
+    db.create_tables([User, Guest, Company, RoomType, Room,
+                      Invoice, Receipt, CheckIn, CheckOut, Reservation])
 
     User.create(name='Dássone Yotamo', email='dyotamo@gmail.com',
                 profile='admin', password=gph('passwd'))

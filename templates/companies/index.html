@@ -2,11 +2,11 @@
 
 {% block content %}
 <div>
-    <h1>Cadastro de Empresas <small><a href="{{ url_for('companies.company_new') }}">(+)</small></a></h1>
+    <h3>Cadastro de Empresas <small><a href="{{ url_for('companies.company_new') }}">(+)</small></a></h3>
 
     {% if companies %}
     <div class="table-responsive">
-        <table class="table table-borderless">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Empresa</th>

@@ -2,7 +2,7 @@
 
 {% block content %}
 <div>
-    <h1>Novo Quarto</h1>
+    <h3>Novo Quarto</h3>
 
     {% from "helpers/_form_helpers.html" import render_field %}
     <form method="POST" action="{{ url_for('rooms.room_new') }}">

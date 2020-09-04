@@ -2,11 +2,11 @@
 
 {% block content %}
 <div>
-    <h1>Cadastro de Hóspedes <small><a href="{{ url_for('guests.guest_new') }}">(+)</small></a></h1>
+    <h3>Cadastro de Hóspedes <small><a href="{{ url_for('guests.guest_new') }}">(+)</small></a></h3>
 
     {% if guests %}
     <div class="table-responsive">
-        <table class="table table-borderless">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Nome</th>
