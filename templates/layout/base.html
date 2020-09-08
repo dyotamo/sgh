@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lumen/bootstrap.min.css"
         crossorigin="anonymous">
 
+    <script defer src="https://kit.fontawesome.com/e0c6ae1811.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script defer type="text/javascript" src="/path/to/jquery.js"></script>
+    <script defer type="text/javascript" src="/path/to/moment.js"></script>
+    <script defer type="text/javascript" src="/path/to/tempusdominus-bootstrap-4.min.js"></script>
     <script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -18,67 +23,64 @@
     <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-    <script defer src="https://kit.fontawesome.com/e0c6ae1811.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
     <title>SGH</title>
 </head>
 
 <body>
     <div class="sidebar">
-        <a href="{{ url_for('index') }}">Página Inicial</a>
+        <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Página Inicial</a>
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="{{ url_for('reservations.reservation_index') }}">Reservas</a>
+        <a href="{{ url_for('reservations.reservation_index') }}"><i class="fas fa-ticket-alt"></i> Reservas</a>
         {% endif %}
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="{{ url_for('guests.guest_index') }}">Hóspedes</a>
+        <a href="{{ url_for('guests.guest_index') }}"><i class="fas fa-house-user"></i> Hóspedes</a>
         {% endif %}
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="{{ url_for('companies.company_index') }}">Empresas</a>
+        <a href="{{ url_for('companies.company_index') }}"><i class="far fa-building"></i> Empresas</a>
         {% endif %}
 
         <hr />
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="#">Check-In</a>
+        <a href="#"><i class="fas fa-sign-in-alt"></i> Check-In</a>
         {% endif %}
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="#">Check-Out</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Check-Out</a>
         {% endif %}
 
         <hr />
 
         {% if current_user.profile in ('admin') %}
-        <a href="{{ url_for('room_types.room_type_index') }}">Tipos de Quarto</a>
+        <a href="{{ url_for('room_types.room_type_index') }}"><i class="fas fa-person-booth"></i> Tipos de Quarto</a>
         {% endif %}
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="{{ url_for('rooms.room_index') }}">Quartos</a>
+        <a href="{{ url_for('rooms.room_index') }}"><i class="fas fa-bed"></i> Quartos</a>
         {% endif %}
 
         <hr />
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="#">Despesas</a>
+        <a href="#"><i class="fas fa-hamburger"></i> Despesas</a>
         {% endif %}
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="#">Relatórios</a>
+        <a href="#"><i class="fas fa-chart-pie"></i> Relatórios</a>
         {% endif %}
 
         {% if current_user.profile in ('admin') %}
-        <a href="{{ url_for('users.user_index') }}">Usuários</a>
+        <a href="{{ url_for('users.user_index') }}"><i class="fas fa-users"></i> Usuários</a>
         {% endif %}
 
         <hr />
 
         {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
-        <a href="#">Definições</a>
-        <a href="{{ url_for('logout') }}">Sair</a>
+        <a href="#"><i class="fas fa-cog"></i> Definições</a>
+        <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a>
         {% endif %}
     </div>
 

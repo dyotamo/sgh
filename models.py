@@ -35,8 +35,10 @@ class User(BaseModel, UserMixin):
 
     created_at = DateTimeField(default=datetime.now())
     updated_at = DateTimeField(null=True)
-    created_by = ForeignKeyField('self', column_name='created_by', null=True)
-    updated_by = ForeignKeyField('self',  column_name='updated_by', null=True)
+    created_by = ForeignKeyField(
+        'self', column_name='created_by', null=True, backref='created')
+    updated_by = ForeignKeyField(
+        'self',  column_name='updated_by', null=True, backref='updated')
 
     def get_profile_label(self):
         return dict(PROFILES)[self.profile]
@@ -45,8 +47,10 @@ class User(BaseModel, UserMixin):
 class Mutable(BaseModel):
     created_at = DateTimeField(default=datetime.now())
     updated_at = DateTimeField(null=True)
-    created_by = ForeignKeyField(User, column_name='created_by', null=True)
-    updated_by = ForeignKeyField(User,  column_name='updated_by', null=True)
+    created_by = ForeignKeyField(
+        User, column_name='created_by', null=True, backref='created')
+    updated_by = ForeignKeyField(
+        User,  column_name='updated_by', null=True, backref='updated')
 
 
 class Company(Mutable):
@@ -71,7 +75,8 @@ class Guest(Mutable):
     mother_name = CharField(max_length=255)
     marital_status = CharField(max_length=20)
     nationality = CharField(max_length=255)
-    company = ForeignKeyField(Company, null=True, default=None)
+    company = ForeignKeyField(
+        Company, null=True, default=None, backref='guests')
     gender = CharField(max_length=10, choices=GENDERS)
 
     def get_company(self):
@@ -96,7 +101,7 @@ class RoomType(Mutable):
 
 class Room(Mutable):
     number = IntegerField(unique=True)
-    category = ForeignKeyField(RoomType)
+    category = ForeignKeyField(RoomType, backref='rooms')
     status = CharField(max_length=50, choices=ROOM_STATUSES)
     daily_amount = FloatField()
 
@@ -112,14 +117,15 @@ class Reservation(Mutable):
     check_out_time = DateTimeField()
     adult_number = IntegerField()
     children_number = IntegerField()
-    company = ForeignKeyField(Company, null=True, default=None)
+    company = ForeignKeyField(
+        Company, null=True, default=None, backref='reservations')
     is_active = BooleanField(default=True)
 
 
 class CheckIn(Mutable):
     in_date = DateTimeField()
     out_date = DateTimeField()
-    room = ForeignKeyField(Room)
+    room = ForeignKeyField(Room, backref='checkins')
     is_active = BooleanField(default=True)
 
 
@@ -133,7 +139,7 @@ class Expense(Mutable):
     description = CharField(max_length=255)
     quantity = IntegerField()
     amount = FloatField()
-    check_in = ForeignKeyField(CheckIn)
+    check_in = ForeignKeyField(CheckIn, backref='expenses')
 
 
 class CheckOut(Mutable):
@@ -141,7 +147,7 @@ class CheckOut(Mutable):
     expenses_total = FloatField()
     payment_type = CharField(max_length=50)
     dailt_total = IntegerField()
-    check_in = ForeignKeyField(CheckIn)
+    check_in = ForeignKeyField(CheckIn, backref='checkout')
     is_active = BooleanField(default=True)
 
 

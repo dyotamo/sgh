@@ -6,26 +6,40 @@
 
     {% if reservations %}
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table class="table table-borderless">
             <thead>
                 <tr>
+                    <th scope="col">#</th>
                     <th scope="col">Check In</th>
                     <th scope="col">Check Out</th>
                     <th scope="col">Adultos</th>
                     <th scope="col">Crianças</th>
-                    <th scope="col">Empresa</th>
-                    <th scope="col"></th>
+                    <th scope="col">Em nome de</th>
+                    <th scope="col" colspan="2"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for reservation in reservations %}
                 <tr>
-                    <td>{{ reservation.check_in_time }}</td>
-                    <td>{{ reservation.check_out_time }}</td>
+                    {% if reservation.is_active %}
+                    <td><img src="{{ url_for('static', filename='active.png') }}" /></td>
+                    {% else %}
+                    <td><img src="{{ url_for('static', filename='inactive.png') }}" /></td>
+                    {% endif %}
+                    <td>{{ reservation.check_in_time | pretty_date }}</td>
+                    <td>{{ reservation.check_out_time | pretty_date}}</td>
                     <td>{{ reservation.adult_number }}</td>
                     <td>{{ reservation.children_number }}</td>
                     <td>{{ reservation.company.name }}</td>
-                    <td>{{ reservation.is_active }}</td>
+                    <td>
+                        {% if reservation.is_active %}
+                        <a
+                            href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}">Inativar</a>
+                        {% else %}
+                        <a
+                            href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}">Reactivar</a>
+                        {% endif %}
+                    </td>
                     <td><a
                             href="{{ url_for('reservations.reservation_edit', reservation_id=reservation.id) }}">Editar</a>
                     </td>

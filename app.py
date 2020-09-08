@@ -22,6 +22,11 @@ app.register_blueprint(room_types)
 app.register_blueprint(reservations)
 
 
+@app.template_filter('pretty_date')
+def pretty_date(dttm):
+    return dttm.strftime('%d/%m/%Y')
+
+
 if bool(environ.get('PRODUCTION')):
     mini = minify(html=True, js=True, cssless=True)
     mini.init_app(app)

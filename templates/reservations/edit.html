@@ -2,25 +2,33 @@
 
 {% block content %}
 <div>
-    <h3>Alterar Reserva</h3>
+    <h3>Nova Reserva</h3>
 
     {% from "helpers/_form_helpers.html" import render_field %}
     <form method="POST" action="#">
         {{ form.csrf_token }}
-        <div class="form-group">
-            {{ render_field(form.check_in, class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.check_out, class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.adult_number, class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.children_number, class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.company, class="form-control") }}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ render_field(form.check_in_time, class="form-control", placeholder="dd/mm/aaaa") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.adult_number, class="form-control") }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ render_field(form.check_out_time, class="form-control", placeholder="dd/mm/aaaa") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.children_number, class="form-control") }}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {{ render_field(form.company, class="form-control") }}
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <input type="submit" class="btn btn-primary btn-block" value="Alterar">
