@@ -1,0 +1,46 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    <h3>Cadastro de Check-In <small><a href="{{ url_for('checkins.checkin_new') }}">(+)</small></a></h3>
+
+    {% if checkins %}
+    <div class="table-responsive">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Check In</th>
+                    <th scope="col">Check Out</th>
+                    <th scope="col">Quatro</th>
+                    <th scope="col" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for checkin in checkins %}
+                <tr>
+                    {% if checkin.is_active %}
+                    <td><img src="{{ url_for('static', filename='active.png') }}" /></td>
+                    {% else %}
+                    <td><img src="{{ url_for('static', filename='inactive.png') }}" /></td>
+                    {% endif %}
+                    <td>{{ checkin.check_in_time | pretty_date }}</td>
+                    <td>{{ checkin.check_out_time | pretty_date}}</td>
+                    <td>{{ checkin.room.number }}</td>
+                    <td>
+                        {% if checkin.is_active %}
+                        <a href="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}">Inativar</a>
+                        {% else %}
+                        <a href="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}">Reactivar</a>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('checkins.checkin_edit', checkin_id=checkin.id) }}">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

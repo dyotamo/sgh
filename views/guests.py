@@ -19,6 +19,13 @@ def guest_index():
     return render_template('guests/index.html', guests=get_all(Guest))
 
 
+@guests.route('/<int:guest_id>', methods=['GET'])
+@login_required
+@allowed_profile(['receptionist', 'manager', 'admin'])
+def guest_details(guest_id: int):
+    return render_template('guests/details.html', guest=get(Guest, guest_id))
+
+
 @guests.route('/new', methods=['GET', 'POST'])
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])

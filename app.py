@@ -6,9 +6,9 @@ from flask_login import LoginManager, login_required, login_user, logout_user
 from models import User
 from dao import get
 from forms.login import LoginForm
-from utils.security import allowed_profile, check_user
-
-from views import rooms, companies, users, guests, room_types, reservations
+from utils.security import allowed_profile
+from services import check_user
+from views import rooms, companies, users, guests, room_types, reservations, checkins
 
 
 app = Flask(__name__)
@@ -20,6 +20,7 @@ app.register_blueprint(users)
 app.register_blueprint(guests)
 app.register_blueprint(room_types)
 app.register_blueprint(reservations)
+app.register_blueprint(checkins)
 
 
 @app.template_filter('pretty_date')

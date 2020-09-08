@@ -8,17 +8,14 @@
     <form method="POST" action="{{ url_for('checkins.checkin_new') }}">
         {{ form.csrf_token }}
         <div class="form-group">
+            {{ render_field(form.check_out_time, class="form-control", placeholder="dd/mm/aaaa") }}
+        </div>
+        <div class="form-group">
             {{ render_field(form.room, class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.check_in_time, class="form-control", placeholder="dd/mm/aaaa") }}
-        </div>
-        <div class="form-group">
-            {{ render_field(form.check_out, class="form-control", placeholder="dd/mm/aaaa") }}
         </div>
         <div class="form-group">
             <input type="submit" class="btn btn-primary btn-block" value="Criar">
         </div>
+    </form>
 </div>
-</form>
 {% endblock %}

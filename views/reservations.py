@@ -8,6 +8,7 @@ from forms.reservation import ReservationForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
 from utils.validators import validate_reservation
+from services import toogle_activation
 
 
 reservations = Blueprint('reservations', __name__, url_prefix='/reservations')
@@ -60,8 +61,7 @@ def reservation_edit(reservation_id: int):
 def reservation_deactivate(reservation_id: int):
     reservation = get(Reservation, reservation_id)
     if request.method == 'POST':
-        reservation.is_active = not reservation.is_active
-        reservation.save()
+        toogle_activation(reservation)
         flash('Yes, reserva {} com sucesso.'.format(
             'reactivada' if reservation.is_active else 'desactivada'), 'success')
         return redirect(url_for('reservations.reservation_index'))

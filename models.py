@@ -75,8 +75,7 @@ class Guest(Mutable):
     mother_name = CharField(max_length=255)
     marital_status = CharField(max_length=20)
     nationality = CharField(max_length=255)
-    company = ForeignKeyField(
-        Company, null=True, default=None, backref='guests')
+    company = ForeignKeyField(Company, null=True, backref='guests')
     gender = CharField(max_length=10, choices=GENDERS)
 
     def get_company(self):
@@ -117,14 +116,13 @@ class Reservation(Mutable):
     check_out_time = DateTimeField()
     adult_number = IntegerField()
     children_number = IntegerField()
-    company = ForeignKeyField(
-        Company, null=True, default=None, backref='reservations')
+    company = ForeignKeyField(Company, null=True, backref='reservations')
     is_active = BooleanField(default=True)
 
 
 class CheckIn(Mutable):
-    in_date = DateTimeField()
-    out_date = DateTimeField()
+    check_in_time = DateTimeField(default=datetime.now())
+    check_out_time = DateTimeField()
     room = ForeignKeyField(Room, backref='checkins')
     is_active = BooleanField(default=True)
 
