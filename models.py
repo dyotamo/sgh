@@ -1,15 +1,24 @@
 from datetime import datetime
+from os import environ
 
+from dsnparse import parse
 from werkzeug.security import generate_password_hash as gph
 from flask_login import UserMixin
-from peewee import (SqliteDatabase, Model, CharField, DateTimeField,
-                    ForeignKeyField, IntegerField, FloatField, BooleanField)
+from peewee import (SqliteDatabase, PostgresqlDatabase, Model, CharField,
+                    DateTimeField, ForeignKeyField, IntegerField, FloatField, BooleanField)
 
 
 from utils.constants import (PROFILES, GENDERS, CATEGORIES,
                              ROOM_STATUSES, ID_TYPES, MARITAL_STATUSES)
 
-db = SqliteDatabase('dev.db')
+db_url = environ.get('DATABASE_URL')
+
+if db_url:
+    url = parse(db_url)
+    db = PostgresqlDatabase(url.paths[0], user=url.username,
+                            password=url.password, host=url.host, port=url.port)
+else:
+    db = SqliteDatabase('dev.db')
 
 
 class BaseModel(Model):
