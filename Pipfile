@@ -14,6 +14,7 @@ flask-login = "*"
 flask-minify = "*"
 email-validator = "*"
 wtf-peewee = "*"
+faker = "*"
 
 [requires]
 python_version = "3.6"

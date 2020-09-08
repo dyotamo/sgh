@@ -1,5 +1,5 @@
 from os import environ
-from flask import Flask, render_template, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_minify import minify
 from flask_login import LoginManager, login_required, login_user, logout_user
 
@@ -48,16 +48,12 @@ def index():
 
 @app.errorhandler(404)
 def not_found(e):
-    resp = jsonify(dict(error="not found"))
-    resp.status_code = 404
-    return resp
+    return render_template('errors/404.html')
 
 
 @app.errorhandler(403)
 def forbidden(e):
-    resp = jsonify(dict(error="forbidden"))
-    resp.status_code = 403
-    return resp
+    return render_template('errors/403.html')
 
 
 @app.route('/accounts/login', methods=['GET', 'POST'])
