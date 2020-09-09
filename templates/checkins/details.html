@@ -1,0 +1,41 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    {% if checkin.checkinguests %}
+    <div class="table-responsive">
+        <table class="table table-borderless card card-body bg-light">
+            <thead>
+                <tr>
+                    <th scope="col">Hóspede</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for checkinguest in checkin.checkinguests %}
+                <tr>
+                    <td>{{ checkinguest.guest.name }}</td>
+                    <form method="POST" action="#">
+                        <td><a href="#" class="btn btn-danger">Remover</a></td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <hr />
+
+    {% from "helpers/_form_helpers.html" import render_field %}
+    <form method="POST" action="{{ url_for('checkins.checkin_details', checkin_id=checkin.id) }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ render_field(form.guest, class="form-control selectpicker", data_live_search="true") }}
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Adicionar">
+        </div>
+    </form>
+</div>
+{% endblock %}

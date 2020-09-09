@@ -31,7 +31,8 @@
                     <td>{{ company.fax }}</td>
                     <td>{{ company.cellphone }}</td>
                     <td>{{ company.email }}</td>
-                    <td><a href="{{ url_for('companies.company_edit', company_id=company.id) }}">Editar</a></td>
+                    <td><a href="{{ url_for('companies.company_edit', company_id=company.id) }}"
+                            class="btn btn-primary">Editar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

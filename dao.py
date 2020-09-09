@@ -28,7 +28,6 @@ def get_where(model: Type, **kwargs) -> Model:
 
 @db.atomic()
 def create(model: Type, **kwargs):
-    print(kwargs)
     obj = model.create(**kwargs)
     if isinstance(obj, Mutable) or isinstance(obj, User):
         obj.created_by = current_user.id

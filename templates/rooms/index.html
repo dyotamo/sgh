@@ -23,7 +23,8 @@
                     <td>{{ room.category.name }}</td>
                     <td>{{ room.get_status_label() }}</td>
                     <td>{{  "%.2f MT"|format(room.daily_amount) }}</td>
-                    <td><a href="{{ url_for('rooms.room_edit', room_id=room.id) }}">Editar</a></td>
+                    <td><a href="{{ url_for('rooms.room_edit', room_id=room.id) }}" class="btn btn-primary">Editar</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

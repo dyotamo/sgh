@@ -26,8 +26,10 @@
                     <td>{{ guest.cellphone }}</td>
                     <td>{{ guest.get_marital_status_label() }}</td>
                     <td>{{ guest.get_company() }}</td>
-                    <td><a href="{{ url_for('guests.guest_details', guest_id=guest.id) }}">Detalhes</a></td>
-                    <td><a href="{{ url_for('guests.guest_edit', guest_id=guest.id) }}">Editar</a></td>
+                    <td><a href="{{ url_for('guests.guest_details', guest_id=guest.id) }}"
+                            class="btn btn-default">Detalhes</a></td>
+                    <td><a href="{{ url_for('guests.guest_edit', guest_id=guest.id) }}"
+                            class="btn btn-primary">Editar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

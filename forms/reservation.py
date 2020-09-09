@@ -10,7 +10,7 @@ class ReservationForm(FlaskForm):
     adult_number = IntegerField('Adultos', validators=[REQUIRED])
     children_number = IntegerField('Crianças', validators=[REQUIRED])
     company = SelectField('Em nome de', choices=get_model_tuple(Company))
-    check_in_time = DateField('Check In', validators=[
+    check_in_time = DateField('Data do Check In', validators=[
                               REQUIRED], format='%d/%m/%Y')
-    check_out_time = DateField('Check Out', validators=[
+    check_out_time = DateField('Data do Check Out', validators=[
                                REQUIRED], format='%d/%m/%Y')

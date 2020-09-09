@@ -4,8 +4,8 @@ from os import environ
 from dsnparse import parse
 from werkzeug.security import generate_password_hash as gph
 from flask_login import UserMixin
-from peewee import (SqliteDatabase, PostgresqlDatabase, Model, CharField,
-                    DateTimeField, ForeignKeyField, IntegerField, FloatField, BooleanField)
+from peewee import (SqliteDatabase, PostgresqlDatabase, Model, CharField, DateTimeField,
+                    ForeignKeyField, IntegerField, FloatField, BooleanField, CompositeKey)
 
 
 from utils.constants import (PROFILES, GENDERS, CATEGORIES,
@@ -128,8 +128,11 @@ class CheckIn(Mutable):
 
 
 class CheckInGuest(BaseModel):
-    guest = ForeignKeyField(Guest)
-    check_in = ForeignKeyField(CheckIn)
+    guest = ForeignKeyField(Guest, backref='checkinguests')
+    check_in = ForeignKeyField(CheckIn, backref='checkinguests')
+
+    class Meta:
+        primary_key = CompositeKey('guest', 'check_in')
 
 
 class Expense(Mutable):
@@ -161,7 +164,7 @@ class Receipt(Mutable):
 
 if __name__ == "__main__":
     db.create_tables([User, Guest, Company, RoomType, Room,
-                      Invoice, Receipt, CheckIn, CheckOut, Reservation])
+                      Invoice, Receipt, CheckIn, CheckInGuest, CheckOut, Reservation])
 
     User.create(name='Dássone Yotamo', email='dyotamo@gmail.com',
                 profile='admin', password=gph('passwd'))

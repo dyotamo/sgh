@@ -17,7 +17,8 @@
                 {% for room_type in room_types %}
                 <tr>
                     <th scope="row">{{ room_type.name }}</th>
-                    <td><a href="{{ url_for('room_types.room_type_edit', room_type_id=room_type.id) }}">Editar</a></td>
+                    <td><a href="{{ url_for('room_types.room_type_edit', room_type_id=room_type.id) }}"
+                            class="btn btn-primary">Editar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

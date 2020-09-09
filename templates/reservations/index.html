@@ -33,15 +33,15 @@
                     <td>{{ reservation.company.name }}</td>
                     <td>
                         {% if reservation.is_active %}
-                        <a
-                            href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}">Inativar</a>
+                        <a href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}"
+                            class="btn btn-warning">Inativar</a>
                         {% else %}
-                        <a
-                            href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}">Reactivar</a>
+                        <a href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}"
+                            class="btn btn-success">Reactivar</a>
                         {% endif %}
                     </td>
-                    <td><a
-                            href="{{ url_for('reservations.reservation_edit', reservation_id=reservation.id) }}">Editar</a>
+                    <td><a href="{{ url_for('reservations.reservation_edit', reservation_id=reservation.id) }}"
+                            class="btn btn-primary">Editar</a>
                     </td>
                 </tr>
                 {% endfor %}

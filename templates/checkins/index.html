@@ -27,15 +27,19 @@
                     <td>{{ checkin.check_in_time | pretty_date }}</td>
                     <td>{{ checkin.check_out_time | pretty_date}}</td>
                     <td>{{ checkin.room.number }}</td>
-                    <td>Ver</td>
+                    <td><a href="{{ url_for('checkins.checkin_details', checkin_id=checkin.id) }}"
+                            class="btn btn-default">Ver</a></td>
                     <td>
                         {% if checkin.is_active %}
-                        <a href="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}">Inativar</a>
+                        <a href="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}"
+                            class="btn btn-warning">Inativar</a>
                         {% else %}
-                        <a href="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}">Reactivar</a>
+                        <a href="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}"
+                            class="btn btn-success">Reactivar</a>
                         {% endif %}
                     </td>
-                    <td><a href="{{ url_for('checkins.checkin_edit', checkin_id=checkin.id) }}">Editar</a>
+                    <td><a href="{{ url_for('checkins.checkin_edit', checkin_id=checkin.id) }}"
+                            class="btn btn-primary">Editar</a></td>
                     </td>
                 </tr>
                 {% endfor %}
