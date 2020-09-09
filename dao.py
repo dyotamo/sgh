@@ -2,10 +2,8 @@ from datetime import datetime
 from typing import Type
 
 from flask import abort
-from flask_login import current_user
-from peewee import Model, ModelSelect
-
-from models import db, Mutable, User
+from peewee import Model, ModelSelect, fn
+from playhouse.shortcuts import update_model_from_dict
 
 
 def get(model: Type, id: int) -> Model:
@@ -19,6 +17,10 @@ def get_all(model: Type) -> ModelSelect:
     return model.select()
 
 
+def get_random(model: Type) -> Model:
+    return model.select().order_by(fn.Random()).get()
+
+
 def get_where(model: Type, **kwargs) -> Model:
     try:
         return model.get(**kwargs)
@@ -26,19 +28,19 @@ def get_where(model: Type, **kwargs) -> Model:
         pass
 
 
-@db.atomic()
 def create(model: Type, **kwargs):
-    obj = model.create(**kwargs)
-    if isinstance(obj, Mutable) or isinstance(obj, User):
-        obj.created_by = current_user.id
-        obj.save()
+    model.create(**kwargs)
 
 
-@db.atomic()
 def update(model: Type, id: int, **kwargs):
-    model.update(**kwargs).where(model.id == id).execute()
-    obj = get(model, id)
-    if isinstance(obj, Mutable) or isinstance(obj, User):
-        obj.updated_by = current_user.id
-        obj.updated_at = datetime.now()
-        obj.save()
+    instance = get(model, id)
+    _update_attrs(kwargs, instance)
+    instance.save()
+    return instance
+
+
+def _update_attrs(kwargs, instance):
+    """ that was tricky, using
+    reflection to update newer attrs """
+    for k, v in kwargs.items():
+        setattr(instance, k, v)

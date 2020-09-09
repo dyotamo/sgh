@@ -1,24 +1,17 @@
 from datetime import datetime
 from os import environ
 
-from dsnparse import parse
+from playhouse.db_url import connect
+from playhouse.signals import Model, pre_save
+from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash as gph
-from flask_login import UserMixin
-from peewee import (SqliteDatabase, PostgresqlDatabase, Model, CharField, DateTimeField,
+from peewee import (SqliteDatabase, PostgresqlDatabase, CharField, DateTimeField,
                     ForeignKeyField, IntegerField, FloatField, BooleanField, CompositeKey)
-
 
 from utils.constants import (PROFILES, GENDERS, CATEGORIES,
                              ROOM_STATUSES, ID_TYPES, MARITAL_STATUSES)
 
-db_url = environ.get('DATABASE_URL')
-
-if db_url:
-    url = parse(db_url)
-    db = PostgresqlDatabase(url.paths[0], user=url.username,
-                            password=url.password, host=url.host, port=url.port)
-else:
-    db = SqliteDatabase('dev.db')
+db = connect(environ.get('DATABASE_URL') or 'sqlite:///dev.db')
 
 
 class BaseModel(Model):
@@ -79,10 +72,7 @@ class Guest(Mutable):
     gender = CharField(max_length=10, choices=GENDERS)
 
     def get_company(self):
-        try:
-            return self.company.name
-        except Company.DoesNotExist:
-            return 'Nenhuma'
+        return self.company.name
 
     def get_id_type_label(self):
         return dict(ID_TYPES)[self.id_type]
@@ -162,8 +152,17 @@ class Receipt(Mutable):
     is_duplicate = BooleanField(default=True)
 
 
+# @pre_save(sender=Mutable)
+def on_save_handler(model_class, instance, created):
+    if created:
+        instance.created_by = current_user.id
+    else:
+        instance.updated_by = current_user.id
+        instance.updated_at = datetime.now()
+
+
 if __name__ == "__main__":
-    db.create_tables([User, Guest, Company, RoomType, Room,
+    db.create_tables([User, Guest, Company, RoomType, Room, Expense,
                       Invoice, Receipt, CheckIn, CheckInGuest, CheckOut, Reservation])
 
     User.create(name='Dássone Yotamo', email='dyotamo@gmail.com',

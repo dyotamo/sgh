@@ -1,37 +1,44 @@
 from random import choice
-from datetime import datetime
 
-from peewee import fn
 from faker import Faker
 
 from models import User, Company, RoomType, Room
+from dao import create, get_random, get
 from utils.constants import PROFILES, ROOM_STATUSES
+
 
 fake = Faker()
 
 
-# Users
-for _ in range(10):
-    User.create(name=fake.name(), email=fake.email(),
-                profile=choice(PROFILES)[0])
-
-# Companies
-for _ in range(25):
-    Company.create(name=fake.company(), nuit='100000008',
-                   activity_branch=fake.bs().title(), address=fake.address(),
-                   telephone=fake.phone_number(), fax=fake.phone_number(), cellphone=fake.phone_number(),
-                   email=fake.email(), created_by=1, created_at=datetime.now())
-
-# Room types
-RoomType.create(name='Solteiro', created_by=1, created_at=datetime.now())
-RoomType.create(name='Casal', created_by=1, created_at=datetime.now())
-RoomType.create(name='Familiar', created_by=1, created_at=datetime.now())
-RoomType.create(name='Presidencial', created_by=1, created_at=datetime.now())
+def _create_users(size: int):
+    for _ in range(size):
+        create(User, name=fake.name(), email=fake.email(),
+               profile=choice(PROFILES)[0])
 
 
-# Rooms
-for number in range(50):
-    Room.create(number=number, category=RoomType.select().order_by(
-        fn.Random()).get(), status=choice(ROOM_STATUSES)[0], daily_amount=1500, created_by=1, created_at=datetime.now())
+def _create_companies(size: int):
+    for _ in range(size):
+        create(Company, name=fake.company(), nuit='100000008',
+               activity_branch=fake.bs().title(), address=fake.address(),
+               telephone=fake.phone_number(), fax=fake.phone_number(),
+               cellphone=fake.phone_number(), email=fake.email())
 
-print('Done.')
+
+def _create_room_types():
+    create(RoomType, name='Solteiro')
+    create(RoomType, name='Casal')
+    create(RoomType, name='Familiar')
+    create(RoomType, name='Presidencial')
+
+
+def _create_rooms(size: int):
+    for number in range(size):
+        Room.create(number=number, category=get_random(RoomType),
+                    status=choice(ROOM_STATUSES)[0], daily_amount=1500)
+
+
+if __name__ == '__main__':
+    _create_users(5)
+    _create_companies(5)
+    _create_room_types()
+    _create_rooms(10)
