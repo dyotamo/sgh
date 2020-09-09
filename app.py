@@ -65,6 +65,11 @@ def forbidden(e):
     return render_template('errors/403.html')
 
 
+@app.errorhandler(505)
+def server_error(e):
+    return render_template('errors/505.html')
+
+
 @app.route('/accounts/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
