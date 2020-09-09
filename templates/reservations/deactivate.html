@@ -2,13 +2,13 @@
 
 {% block content %}
 <div>
-    <h3>Tem a certeza que pretende {% if checkin.is_active %}desactivar{% else %}reactivar{% endif %} o check-in?
+    <h3>Tem a certeza que pretende {% if reservation.is_active %}desactivar{% else %}reactivar{% endif %} a reserva?
     </h3>
 
     {% from "helpers/_form_helpers.html" import render_field %}
-    <form method="POST" action="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}">
+    <form method="POST" action="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}">
         <div class="form-group">
-            <a href="{{ url_for('checkins.checkin_index') }}" class="btn btn-default">Não</a>
+            <a href="{{ url_for('reservations.reservation_index') }}" class="btn btn-default">Não</a>
             <input type="submit" class="btn btn-primary" value="Sim">
         </div>
 </div>
