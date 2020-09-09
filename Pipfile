@@ -18,6 +18,7 @@ faker = "*"
 gunicorn = "*"
 dsnparse = "*"
 psycopg2 = "*"
+flask-turbolinks = "*"
 
 [requires]
 python_version = "3.6"
