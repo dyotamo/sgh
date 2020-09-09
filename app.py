@@ -23,7 +23,7 @@ app.register_blueprint(room_types)
 app.register_blueprint(reservations)
 app.register_blueprint(checkins)
 
-tul = turbolinks(app)
+# turbolinks(app)
 
 
 @app.template_filter('pretty_date')
