@@ -15,4 +15,4 @@ class RoomForm(FlaskForm):
                                   ('busy', 'Ocupado'),
                                   ('sweeping', 'Em arrumação'),
                                   ('closed', 'Encerrado')])
-    daily_amount = FloatField(validators=[REQUIRED])
+    daily_amount = FloatField('Diária', validators=[REQUIRED])

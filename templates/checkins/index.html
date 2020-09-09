@@ -13,7 +13,7 @@
                     <th scope="col">Check In</th>
                     <th scope="col">Check Out</th>
                     <th scope="col">Quatro</th>
-                    <th scope="col" colspan="2"></th>
+                    <th scope="col" colspan="3"></th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +27,7 @@
                     <td>{{ checkin.check_in_time | pretty_date }}</td>
                     <td>{{ checkin.check_out_time | pretty_date}}</td>
                     <td>{{ checkin.room.number }}</td>
+                    <td>Ver</td>
                     <td>
                         {% if checkin.is_active %}
                         <a href="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}">Inativar</a>
