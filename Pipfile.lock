@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4b3e86064cd22dc024f6143d842b2d258df817271c5d472e0108abb2eac4cc7d"
+            "sha256": "2796f29e0c58d49163990e2b824adf13fc8b5ee4ae40e0b06a2bce747b18938d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -76,13 +76,6 @@
             ],
             "index": "pypi",
             "version": "==0.27"
-        },
-        "flask-turbolinks": {
-            "hashes": [
-                "sha256:9086fa5d425db3530efe7eb96d90067f0531158864f0e7130846e534069d6381"
-            ],
-            "index": "pypi",
-            "version": "==0.2.0"
         },
         "flask-wtf": {
             "hashes": [
@@ -255,13 +248,6 @@
             ],
             "version": "==1.0.1"
         },
-        "wtf-peewee": {
-            "hashes": [
-                "sha256:6d9a6587f600397a537b8b4d14d6111333a992a0f43b9f75b520275dae351a0f"
-            ],
-            "index": "pypi",
-            "version": "==3.0.2"
-        },
         "wtforms": {
             "hashes": [
                 "sha256:7b504fc724d0d1d4d5d5c114e778ec88c37ea53144683e084215eed5155ada4c",
@@ -335,10 +321,10 @@
         },
         "isort": {
             "hashes": [
-                "sha256:92533892058de0306e51c88f22ece002a209dc8e80288aa3cec6d443060d584f",
-                "sha256:a200d47b7ee8b7f7d0a9646650160c4a51b6a91a9413fd31b1da2c4de789f5d3"
+                "sha256:171c5f365791073426b5ed3a156c2081a47f88c329161fd28228ff2da4c97ddb",
+                "sha256:ba91218eee31f1e300ecc079ef0c524cea3fc41bfbb979cbdf5fd3a889e3cfed"
             ],
-            "version": "==5.5.1"
+            "version": "==5.5.2"
         },
         "lazy-object-proxy": {
             "hashes": [

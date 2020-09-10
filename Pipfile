@@ -14,12 +14,11 @@ flask-wtf = "*"
 flask-login = "*"
 flask-minify = "*"
 email-validator = "*"
-wtf-peewee = "*"
 faker = "*"
 gunicorn = "*"
 dsnparse = "*"
 psycopg2 = "*"
-flask-turbolinks = "*"
+
 
 [requires]
 python_version = "3.6"
