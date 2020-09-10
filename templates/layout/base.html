@@ -30,55 +30,55 @@
     <div class="sidebar">
         <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Página Inicial</a>
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="{{ url_for('reservations.reservation_index') }}"><i class="fas fa-ticket-alt"></i> Reservas</a>
         {% endif %}
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="{{ url_for('guests.guest_index') }}"><i class="fas fa-house-user"></i> Hóspedes</a>
         {% endif %}
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="{{ url_for('companies.company_index') }}"><i class="far fa-building"></i> Empresas</a>
         {% endif %}
 
         <hr />
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="{{ url_for('checkins.checkin_index') }}"><i class="fas fa-sign-in-alt"></i> Check-In</a>
         {% endif %}
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#"><i class="fas fa-sign-out-alt"></i> Check-Out</a>
         {% endif %}
 
         <hr />
 
-        {% if current_user.profile in ('admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('admin') %}
         <a href="{{ url_for('room_types.room_type_index') }}"><i class="fas fa-person-booth"></i> Tipos de Quarto</a>
         {% endif %}
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="{{ url_for('rooms.room_index') }}"><i class="fas fa-bed"></i> Quartos</a>
         {% endif %}
 
         <hr />
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#"><i class="fas fa-hamburger"></i> Despesas</a>
         {% endif %}
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#"><i class="fas fa-chart-pie"></i> Relatórios</a>
         {% endif %}
 
-        {% if current_user.profile in ('admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('admin') %}
         <a href="{{ url_for('users.user_index') }}"><i class="fas fa-users"></i> Usuários</a>
         {% endif %}
 
         <hr />
 
-        {% if current_user.profile in ('receptionist', 'manager', 'admin') %}
+        {% if current_user.is_authenticated and current_user.profile in ('receptionist', 'manager', 'admin') %}
         <a href="#"><i class="fas fa-cog"></i> Definições</a>
         <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a>
         {% endif %}
@@ -101,11 +101,12 @@
             <table class="card card-body bg-light">
                 <tr>
                     <td><b>Usuário:</b></td>
-                    <td>&nbsp;&nbsp;&nbsp;{{ current_user.name.title() }} ({{current_user.email}})</td>
+                    <td>&nbsp;&nbsp;&nbsp;{{ current_user.is_authenticated and current_user.name.title() }}
+                        ({{current_user.is_authenticated and current_user.email}})</td>
                 </tr>
                 <tr>
                     <td><b>Perfil:</b></td>
-                    <td>&nbsp;&nbsp;&nbsp;{{ current_user.get_profile_label() }}</td>
+                    <td>&nbsp;&nbsp;&nbsp;{{ current_user.is_authenticated and current_user.get_profile_label() }}</td>
                 </tr>
             </table>
             <hr />
