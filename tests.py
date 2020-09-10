@@ -25,7 +25,7 @@ class TestValidators(TestCase):
             validate_guest(dict(telephone='+258840000000',
                                 cellphone='+2588915652', fax='+2588915652', nuit='100000008'))
 
-    def test_invalid_company(self):
+    def test_valid_company(self):
         validate_guest(dict(telephone='+258840000000',
                             cellphone='+258840000000', fax='+258840000000', nuit='100000008'))
 
