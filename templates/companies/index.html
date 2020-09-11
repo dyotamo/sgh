@@ -10,34 +10,47 @@
             <thead>
                 <tr>
                     <th scope="col">Empresa</th>
-                    <th scope="col">NUIT</th>
                     <th scope="col">Ramo</th>
                     <th scope="col">Endereço</th>
-                    <th scope="col">Telefone</th>
-                    <th scope="col">Fax</th>
-                    <th scope="col">Celular</th>
-                    <th scope="col">Email</th>
-                    <th scope="col"></th>
+                    <th scope="col" colspan="2"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for company in companies %}
                 <tr>
                     <td>{{ company.name }}</td>
-                    <td>{{ company.nuit }}</td>
                     <td>{{ company.activity_branch }}</td>
                     <td>{{ company.address }}</td>
-                    <td>{{ company.telephone }}</td>
-                    <td>{{ company.fax }}</td>
-                    <td>{{ company.cellphone }}</td>
-                    <td>{{ company.email }}</td>
+                    <td><a href="{{ url_for('companies.company_details', company_id=company.id) }}"
+                            class="btn btn-secondary btn-sm">Detalhes</a></td>
                     <td><a href="{{ url_for('companies.company_edit', company_id=company.id) }}"
-                            class="btn btn-primary">Editar</a></td>
+                            class="btn btn-primary btn-sm">Editar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <hr />
+
+    <nav aria-label="page-navigation">
+        <ul class="pagination">
+            {% if has_previous(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('companies.company_index', page=previous_page(pagination)) }}">Anterior</a></li>
+            {% endif %}
+
+            <li class="page-item disabled"><a class="page-link" href="#">Página {{pagination.get_page()}} de
+                    {{pagination.get_page_count()}}</a></li>
+
+            {% if has_next(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('companies.company_index', page=next_page(pagination)) }}">Próximo</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <div class="alert alert-info">Nenhuma empresa cadastrada, ainda.</div>
     {% endif %}
 </div>
 {% endblock %}

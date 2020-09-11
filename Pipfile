@@ -17,7 +17,6 @@ flask-login = "*"
 flask-minify = "*"
 email-validator = "*"
 gunicorn = "*"
-dsnparse = "*"
 psycopg2 = "*"
 
 [requires]

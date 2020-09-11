@@ -56,6 +56,13 @@ def _valid_date(data):
             'Oops, a data do Check-In não pode superior a data do Check-Out.')
 
 
+def _valid_available_room(data):
+    room = get(Room, int(data['room']))
+    if room.status != 'available':
+        raise AttributeError(
+            'Oops, o quarto se encontra no estado {}.'.format(room.get_status_label()))
+
+
 def validate_company(data: Dict[str, str]):
     for validator in [_valid_phone, _valid_cell, _valid_fax, _valid_nuit]:
         validator(data)
@@ -72,5 +79,5 @@ def validate_reservation(data: Dict[str, str]):
 
 
 def validate_check_in(data: Dict[str, str]):
-    for validator in [_valid_date]:
+    for validator in [_valid_date, _valid_available_room]:
         validator(data)

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required
+from playhouse.flask_utils import object_list
 
 from models import User
 from dao import get_all, create, get, update
@@ -15,7 +16,8 @@ users = Blueprint('users', __name__, url_prefix='/users')
 @login_required
 @allowed_profile(['admin'])
 def user_index():
-    return render_template('users/index.html', users=get_all(User))
+    return object_list('users/index.html', query=get_all(User),
+                       context_variable='users', paginate_by=7, check_bounds=False)
 
 
 @users.route('/new', methods=['GET', 'POST'])
@@ -35,6 +37,7 @@ def user_new():
 @login_required
 @allowed_profile(['admin'])
 def user_edit(user_id: int):
+    print(user_id)
     form = UserForm(obj=get(User, user_id))
     if form.validate_on_submit():
         data = get_formdata(form)

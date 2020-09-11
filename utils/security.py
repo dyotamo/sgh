@@ -13,5 +13,5 @@ class allowed_profile:
         def wrapped_func(*args, **kwargs):
             if current_user.profile in self.profiles:
                 return func(*args, **kwargs)
-            raise abort(403)
+            abort(403)
         return wrapped_func

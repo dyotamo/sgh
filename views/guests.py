@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required
+from playhouse.flask_utils import object_list
 
 from models import Guest
 from dao import get_all, create, get, update
@@ -16,7 +17,8 @@ guests = Blueprint('guests', __name__, url_prefix='/guests')
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def guest_index():
-    return render_template('guests/index.html', guests=get_all(Guest))
+    return object_list('guests/index.html', query=get_all(Guest),
+                       context_variable='guests', paginate_by=7, check_bounds=False)
 
 
 @guests.route('/<int:guest_id>', methods=['GET'])

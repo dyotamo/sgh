@@ -1,0 +1,10 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div>
+    <h3>{{ company.name }}</h3>
+    <div>Os detalhes ficarão aqui.</div>
+
+    <td><a href="{{ url_for('companies.company_edit', company_id=company.id) }}">Editar</a></td>
+</div>
+{% endblock %}

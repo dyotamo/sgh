@@ -18,12 +18,14 @@
                 <tr>
                     <th scope="row">{{ room_type.name }}</th>
                     <td><a href="{{ url_for('room_types.room_type_edit', room_type_id=room_type.id) }}"
-                            class="btn btn-primary">Editar</a></td>
+                            class="btn btn-primary btn-sm">Editar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="alert alert-info">Nenhum tipo de quarto criado, ainda.</div>
     {% endif %}
 </div>
 {% endblock %}

@@ -21,13 +21,32 @@
                     <th scope="row">{{ user.name }}</th>
                     <td>{{ user.email }}</td>
                     <td>{{ user.get_profile_label() }}</td>
-                    <td><a href="{{ url_for('users.user_edit', user_id=user.id) }}" class="btn btn-primary">Editar</a>
+                    <td><a href="{{ url_for('users.user_edit', user_id=user.id) }}" class="btn btn-primary btn-sm">Editar</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <hr />
+
+    <nav aria-label="page-navigation">
+        <ul class="pagination">
+            {% if has_previous(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('users.user_index', page=previous_page(pagination)) }}">Anterior</a></li>
+            {% endif %}
+
+            <li class="page-item disabled"><a class="page-link" href="#">Página {{pagination.get_page()}} de
+                    {{pagination.get_page_count()}}</a></li>
+
+            {% if has_next(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('users.user_index', page=next_page(pagination)) }}">Próximo</a></li>
+            {% endif %}
+        </ul>
+    </nav>
     {% endif %}
 </div>
 {% endblock %}

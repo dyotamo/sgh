@@ -38,7 +38,7 @@ def _create_rooms(size: int):
 
 
 if __name__ == '__main__':
-    _create_users(5)
-    _create_companies(5)
+    _create_users(25)
+    _create_companies(50)
     _create_room_types()
-    _create_rooms(10)
+    _create_rooms(250)

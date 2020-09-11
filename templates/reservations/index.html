@@ -34,20 +34,43 @@
                     <td>
                         {% if reservation.is_active %}
                         <a href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}"
-                            class="btn btn-warning">Inativar</a>
+                            class="btn btn-warning btn-sm">Inativar</a>
                         {% else %}
                         <a href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}"
-                            class="btn btn-success">Reactivar</a>
+                            class="btn btn-success btn-sm">Reactivar</a>
                         {% endif %}
                     </td>
                     <td><a href="{{ url_for('reservations.reservation_edit', reservation_id=reservation.id) }}"
-                            class="btn btn-primary">Editar</a>
+                            class="btn btn-primary btn-sm">Editar</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <hr />
+
+    <nav aria-label="page-navigation">
+        <ul class="pagination">
+            {% if has_previous(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('reservations.reservation_index', page=previous_page(pagination)) }}">Anterior</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled"><a class="page-link" href="#">Página {{pagination.get_page()}} de
+                    {{pagination.get_page_count()}}</a></li>
+
+            {% if has_next(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('reservations.reservation_index', page=next_page(pagination)) }}">Próximo</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <div class="alert alert-info">Nenhuma reserva criada, ainda.</div>
     {% endif %}
 </div>
 {% endblock %}

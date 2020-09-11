@@ -4,13 +4,14 @@ from typing import Type
 from flask import abort
 from peewee import Model, ModelSelect, fn
 from playhouse.shortcuts import update_model_from_dict
+from playhouse.flask_utils import get_object_or_404
 
 
 def get(model: Type, id: int) -> Model:
     try:
         return model.get(id)
     except model.DoesNotExist:
-        raise abort(404)
+        abort(404)
 
 
 def get_all(model: Type) -> ModelSelect:
@@ -44,3 +45,7 @@ def _update_attrs(kwargs, instance):
     reflection to update newer attrs """
     for k, v in kwargs.items():
         setattr(instance, k, v)
+
+
+def delete(obj: Model):
+    obj.delete_instance()

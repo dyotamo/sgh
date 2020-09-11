@@ -12,17 +12,20 @@
                 </tr>
             </thead>
             <tbody>
-                {% for checkinguest in checkin.checkinguests %}
+                {% for checkin_guest in checkin.checkinguests %}
                 <tr>
-                    <td>{{ checkinguest.guest.name }}</td>
-                    <form method="POST" action="#">
-                        <td><a href="#" class="btn btn-danger">Remover</a></td>
+                    <td>{{ checkin_guest.guest.name }}</td>
+                    <form method="POST" action="{{ url_for('checkins.checkin_guest_remove', checkin_id=checkin.id) }}">
+                        <input type="hidden" name="checkin_guest_id" value="{{ checkin_guest.id }}" />
+                        <td><button type="submit" class="btn btn-danger">Remover</button></td>
                     </form>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="alert alert-info">Nenhum hóspede adicionado, ainda.</div>
     {% endif %}
 
     <hr />

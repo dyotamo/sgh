@@ -8,7 +8,7 @@
     {% from "helpers/_form_helpers.html" import render_field %}
     <form method="POST" action="{{ url_for('checkins.checkin_deactivate', checkin_id=checkin.id) }}">
         <div class="form-group">
-            <a href="{{ url_for('checkins.checkin_index') }}" class="btn btn-default">Não</a>
+            <a href="{{ url_for('checkins.checkin_index') }}" class="btn btn-secondary">Não</a>
             <input type="submit" class="btn btn-primary" value="Sim">
         </div>
 </div>

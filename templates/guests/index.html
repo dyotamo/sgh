@@ -12,8 +12,6 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Gênero</th>
                     <th scope="col">Idade</th>
-                    <th scope="col">Celular</th>
-                    <th scope="col">Estado Civil</th>
                     <th scope="col" colspan="2"></th>
                 </tr>
             </thead>
@@ -23,18 +21,36 @@
                     <td>{{ guest.name }}</td>
                     <td>{{ guest.get_gender_label() }}</td>
                     <td>{{ guest.age }}</td>
-                    <td>{{ guest.cellphone }}</td>
-                    <td>{{ guest.get_marital_status_label() }}</td>
-                    <td>{{ guest.get_company() }}</td>
                     <td><a href="{{ url_for('guests.guest_details', guest_id=guest.id) }}"
-                            class="btn btn-default">Detalhes</a></td>
+                            class="btn btn-secondary btn-sm">Detalhes</a></td>
                     <td><a href="{{ url_for('guests.guest_edit', guest_id=guest.id) }}"
-                            class="btn btn-primary">Editar</a></td>
+                            class="btn btn-primary btn-sm">Editar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <hr />
+
+    <nav aria-label="page-navigation">
+        <ul class="pagination">
+            {% if has_previous(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('guests.guest_index', page=previous_page(pagination)) }}">Anterior</a></li>
+            {% endif %}
+
+            <li class="page-item disabled"><a class="page-link" href="#">Página {{pagination.get_page()}} de
+                    {{pagination.get_page_count()}}</a></li>
+
+            {% if has_next(pagination) %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('guests.guest_index', page=next_page(pagination)) }}">Próximo</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <div class="alert alert-info">Nenhum hóspede cadastrado, ainda.</div>
     {% endif %}
 </div>
 {% endblock %}

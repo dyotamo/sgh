@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from peewee import IntegrityError
+from playhouse.flask_utils import object_list
 
 from models import CheckIn, CheckInGuest
-from dao import get_all, create, get, update
+from dao import get_all, create, get, update, delete
 from forms.checkin import CheckInForm, CheckInGuestForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
@@ -18,7 +19,8 @@ checkins = Blueprint('checkins', __name__, url_prefix='/checkins')
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def checkin_index():
-    return render_template('checkins/index.html', checkins=get_all(CheckIn))
+    return object_list('checkins/index.html', query=get_all(CheckIn),
+                       context_variable='checkins', paginate_by=7, check_bounds=False)
 
 
 @checkins.route('/new', methods=['GET', 'POST'])
@@ -75,21 +77,25 @@ def checkin_details(checkin_id: int):
     checkin = get(CheckIn, checkin_id)
     form = CheckInGuestForm()
     if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            create(CheckInGuest, check_in=checkin_id, **data)
-            flash('Yes, hóspede adicionado com sucesso.', 'success')
-            return redirect(url_for('checkins.checkin_details', checkin_id=checkin_id))
-        except IntegrityError:
-            flash('Oops, hóspede já foi cadastrado.', 'warning')
+        if checkin.is_active:
+            try:
+                data = get_formdata(form)
+                create(CheckInGuest, check_in=checkin_id, **data)
+                flash('Yes, hóspede adicionado com sucesso.', 'success')
+                return redirect(url_for('checkins.checkin_details', checkin_id=checkin_id))
+            except IntegrityError:
+                flash('Oops, hóspede já foi cadastrado.', 'warning')
+        else:
+            flash('Oops, não podes adicionar hóspedes num check-in inactivo.', 'danger')
     return render_template('checkins/details.html', checkin=checkin, form=form)
 
 
-@checkins.route('/<int:checkin_id>/checkinguest/<int:checkinguest_id>', methods=['POST'])
+@checkins.route('/<int:checkin_id>/remove_guest', methods=['POST'])
 @login_required
 @allowed_profile(['manager', 'admin'])
-def checkinguest_remove(checkin_id: int, checkinguest_id: int):
-    checkin = get(CheckIn, checkin_id)
-    checkinguest = get(CheckInGuest, checkinguest_id)
-    flash('Yes, hóspede removido com sucesso.', 'success')
+def checkin_guest_remove(checkin_id: int):
+    checkin_guest = get(CheckInGuest, request.form['checkin_guest_id'])
+    delete(checkin_guest)
+    flash('Yes, {} removido com sucesso.'.format(
+        checkin_guest.guest.name), 'success')
     return redirect(url_for('checkins.checkin_details', checkin_id=checkin_id))

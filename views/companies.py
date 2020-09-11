@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required
+from playhouse.flask_utils import object_list
 
 from models import Company
 from dao import get_all, create, get, update
@@ -16,7 +17,8 @@ companies = Blueprint('companies', __name__, url_prefix='/companies')
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def company_index():
-    return render_template('companies/index.html', companies=get_all(Company))
+    return object_list('companies/index.html', query=get_all(Company),
+                       context_variable='companies', paginate_by=7, check_bounds=False)
 
 
 @companies.route('/new', methods=['GET', 'POST'])
@@ -51,3 +53,10 @@ def company_edit(company_id: int):
         except AttributeError as e:
             flash(str(e), 'warning')
     return render_template('companies/edit.html', form=form)
+
+
+@companies.route('/<int:company_id>', methods=['GET'])
+@login_required
+@allowed_profile(['receptionist', 'manager', 'admin'])
+def company_details(company_id: int):
+    return render_template('companies/details.html', company=get(Company, company_id))

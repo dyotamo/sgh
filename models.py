@@ -122,7 +122,7 @@ class CheckInGuest(BaseModel):
     check_in = ForeignKeyField(CheckIn, backref='checkinguests')
 
     class Meta:
-        primary_key = CompositeKey('guest', 'check_in')
+        indexes = ((('guest', 'check_in'), True),)
 
 
 class Expense(Mutable):
