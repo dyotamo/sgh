@@ -37,16 +37,16 @@ class User(BaseModel, UserMixin):
         return dict(PROFILES)[self.profile]
 
 
-class Mutable(BaseModel):
-    created_at = DateTimeField(default=datetime.now())
+class Timestampable(BaseModel):
+    created_at = DateTimeField(null=True)
     updated_at = DateTimeField(null=True)
-    created_by = ForeignKeyField(
-        User, column_name='created_by', null=True, backref='created')
-    updated_by = ForeignKeyField(
-        User,  column_name='updated_by', null=True, backref='updated')
+    created_by = ForeignKeyField(User, column_name='created_by',
+                                 null=True, backref='created')
+    updated_by = ForeignKeyField(User,  column_name='updated_by',
+                                 null=True, backref='updated')
 
 
-class Company(Mutable):
+class Company(Timestampable):
     name = CharField(max_length=255)
     nuit = CharField(max_length=9)
     activity_branch = CharField(max_length=255)
@@ -57,7 +57,7 @@ class Company(Mutable):
     email = CharField(max_length=255)
 
 
-class Guest(Mutable):
+class Guest(Timestampable):
     name = CharField(max_length=255)
     id_type = CharField(max_length=10, choices=ID_TYPES)
     id_number = CharField(max_length=50)
@@ -84,11 +84,11 @@ class Guest(Mutable):
         return dict(GENDERS)[self.gender]
 
 
-class RoomType(Mutable):
+class RoomType(Timestampable):
     name = CharField(max_length=255, unique=True)
 
 
-class Room(Mutable):
+class Room(Timestampable):
     number = IntegerField(unique=True)
     category = ForeignKeyField(RoomType, backref='rooms')
     status = CharField(max_length=50, choices=ROOM_STATUSES)
@@ -101,7 +101,7 @@ class Room(Mutable):
         return dict(ROOM_STATUSES)[self.status]
 
 
-class Reservation(Mutable):
+class Reservation(Timestampable):
     check_in_time = DateTimeField()
     check_out_time = DateTimeField()
     adult_number = IntegerField()
@@ -110,7 +110,7 @@ class Reservation(Mutable):
     is_active = BooleanField(default=True)
 
 
-class CheckIn(Mutable):
+class CheckIn(Timestampable):
     check_in_time = DateTimeField(default=datetime.now())
     check_out_time = DateTimeField()
     room = ForeignKeyField(Room, backref='checkins')
@@ -125,7 +125,7 @@ class CheckInGuest(BaseModel):
         indexes = ((('guest', 'check_in'), True),)
 
 
-class Expense(Mutable):
+class Expense(Timestampable):
     category = CharField(max_length=50, choices=CATEGORIES)
     description = CharField(max_length=255)
     quantity = IntegerField()
@@ -133,7 +133,7 @@ class Expense(Mutable):
     check_in = ForeignKeyField(CheckIn, backref='expenses')
 
 
-class CheckOut(Mutable):
+class CheckOut(Timestampable):
     out_date = DateTimeField()
     expenses_total = FloatField()
     payment_type = CharField(max_length=50)
@@ -142,28 +142,19 @@ class CheckOut(Mutable):
     is_active = BooleanField(default=True)
 
 
-class Invoice(Mutable):
+class Invoice(Timestampable):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
 
 
-class Receipt(Mutable):
+class Receipt(Timestampable):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
-
-
-# @pre_save(sender=Mutable)
-def on_save_handler(model_class, instance, created):
-    if created:
-        instance.created_by = current_user.id
-    else:
-        instance.updated_by = current_user.id
-        instance.updated_at = datetime.now()
 
 
 if __name__ == "__main__":
-    db.create_tables([User, Guest, Company, RoomType, Room, Expense,
-                      Invoice, Receipt, CheckIn, CheckInGuest, CheckOut, Reservation])
+    db.create_tables([User, Guest, Company, RoomType, Room,
+                      CheckIn, CheckInGuest, Reservation])
 
     User.create(name='Dássone Yotamo', email='dyotamo@gmail.com',
                 profile='admin', password=gph('passwd'))
