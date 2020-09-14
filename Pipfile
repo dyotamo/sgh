@@ -18,6 +18,7 @@ flask-minify = "*"
 email-validator = "*"
 gunicorn = "*"
 psycopg2 = "*"
+wtf-peewee = "*"
 
 [requires]
 python_version = "3.6"

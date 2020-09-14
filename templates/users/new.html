@@ -6,7 +6,6 @@
 
     {% from "helpers/_form_helpers.html" import render_field %}
     <form method="POST" action="{{ url_for('users.user_new') }}">
-        {{ form.csrf_token }}
         <div class="form-group">
             {{ render_field(form.name, class="form-control") }}
         </div>
