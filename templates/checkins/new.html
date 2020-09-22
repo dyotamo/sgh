@@ -8,7 +8,7 @@
     <form method="POST" action="{{ url_for('checkins.checkin_new') }}">
         {{ form.csrf_token }}
         <div class="form-group">
-            {{ render_field(form.check_out_time, class="form-control", placeholder="dd/mm/aaaa") }}
+            {{ render_field(form.check_out_time, class="form-control", placeholder="aaaa-mm-dd") }}
         </div>
         <div class="form-group">
             {{ render_field(form.room, class="form-control selectpicker", data_live_search="true") }}

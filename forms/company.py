@@ -1,15 +1,11 @@
-from flask_wtf import FlaskForm
-from wtforms import TextField
-
-from utils.validators import REQUIRED, EMAIL
+from wtfpeewee.orm import model_form
+from models import Company
 
 
-class CompanyForm(FlaskForm):
-    name = TextField('Nome', validators=[REQUIRED])
-    nuit = TextField('NUIT', validators=[REQUIRED])
-    activity_branch = TextField('Ramo de actividade', validators=[REQUIRED])
-    address = TextField('Endereço', validators=[REQUIRED])
-    telephone = TextField('Telefone', validators=[REQUIRED])
-    fax = TextField('Fax', validators=[REQUIRED])
-    cellphone = TextField('Celular', validators=[REQUIRED])
-    email = TextField('Email', validators=[REQUIRED, EMAIL])
+CompanyForm = model_form(Company, field_args={'name': dict(label='Nome'),
+                                              'nuit': dict(label='NUIT'),
+                                              'activity_branch': dict(label='Sector de Actuação'),
+                                              'address': dict(label='Endereço'),
+                                              'telephone': dict(label='Telefone'),
+                                              'fax': dict(label='Fax'),
+                                              'cellphone': dict(label='Celular')})

@@ -1,24 +1,16 @@
-from flask_wtf import FlaskForm
-from wtforms import TextField, SelectField, IntegerField
-
-from models import Company
-from utils.validators import REQUIRED
-from utils.constants import ID_TYPES, GENDERS, MARITAL_STATUSES
-from utils.extra import get_model_tuple
+from wtfpeewee.orm import model_form
+from models import Guest
 
 
-class GuestForm(FlaskForm):
-    name = TextField('Nome', validators=[REQUIRED])
-    age = IntegerField('Idade', validators=[REQUIRED])
-    id_type = SelectField('Tipo de Documento', validators=[
-                          REQUIRED], choices=ID_TYPES)
-    id_number = TextField('Número de Documento', validators=[REQUIRED])
-    address = TextField('Endereço', validators=[REQUIRED])
-    cellphone = TextField('Celular', validators=[REQUIRED])
-    father_name = TextField('Nome do Pai')
-    mother_name = TextField('Nome da Mãe')
-    marital_status = SelectField('Estado Civil', validators=[
-        REQUIRED], choices=MARITAL_STATUSES)
-    nationality = TextField('Nacionalidade', validators=[REQUIRED])
-    company = SelectField('Empresa', choices=get_model_tuple(Company))
-    gender = SelectField('Gênero', choices=GENDERS)
+GuestForm = model_form(Guest, field_args={'name': dict(label='Nome'),
+                                          'age': dict(label='Idade'),
+                                          'id_type': dict(label='Tipo de Documento'),
+                                          'id_number': dict(label='Número'),
+                                          'address': dict(label='Endereço'),
+                                          'cellphone': dict(label='Celular'),
+                                          'father_name': dict(label='Nome do Pai'),
+                                          'mother_name': dict(label='Nome da Mãe'),
+                                          'marital_status': dict(label='Estado Civil'),
+                                          'nationality': dict(label='Nacionalidade'),
+                                          'company': dict(label='Em nome de'),
+                                          'gender': dict(label='Gênero')})

@@ -8,8 +8,8 @@ from dao import get_all, create, get, update, delete
 from forms.checkin import CheckInForm, CheckInGuestForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
-from utils.validators import validate_check_in
-from services import toogle_activation
+from utils.validators import (
+    validate_check_in_creation, validate_check_in_edit, validate_check_in_guest)
 
 
 checkins = Blueprint('checkins', __name__, url_prefix='/checkins')
@@ -27,16 +27,20 @@ def checkin_index():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def checkin_new():
-    form = CheckInForm()
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            validate_check_in(data)
-            create(CheckIn, **data)
-            flash('Yes, checkin cadastrado com sucesso.', 'success')
-            return redirect(url_for('checkins.checkin_index'))
-        except AttributeError as e:
-            flash(str(e), 'warning')
+    checkin = CheckIn()
+    if request.method == 'POST':
+        form = CheckInForm(request.form, obj=checkin)
+        if form.validate():
+            try:
+                form.populate_obj(checkin)
+                validate_check_in_creation(checkin)
+                checkin.save()
+                flash('Yes, check in feito com sucesso.', 'success')
+                return redirect(url_for('checkins.checkin_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = CheckInForm(obj=checkin)
     return render_template('checkins/new.html', form=form)
 
 
@@ -44,30 +48,21 @@ def checkin_new():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def checkin_edit(checkin_id: int):
-    form = CheckInForm(obj=get(CheckIn, checkin_id))
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            validate_check_in(data)
-            update(CheckIn, checkin_id, **data)
-            flash('Yes, checkin alterado com sucesso.', 'success')
-            return redirect(url_for('checkins.checkin_index'))
-        except AttributeError as e:
-            flash(str(e), 'warning')
-    return render_template('checkins/edit.html', form=form)
-
-
-@checkins.route('/<int:checkin_id>/deactivate', methods=['GET', 'POST'])
-@login_required
-@allowed_profile(['manager', 'admin'])
-def checkin_deactivate(checkin_id: int):
     checkin = get(CheckIn, checkin_id)
     if request.method == 'POST':
-        toogle_activation(checkin)
-        flash('Yes, checkin {} com sucesso.'.format(
-            'reactivado' if checkin.is_active else 'desactivado'), 'success')
-        return redirect(url_for('checkins.checkin_index'))
-    return render_template('checkins/deactivate.html', checkin=checkin)
+        form = CheckInForm(request.form, obj=checkin)
+        if form.validate():
+            try:
+                form.populate_obj(checkin)
+                validate_check_in_edit(checkin)
+                checkin.save()
+                flash('Yes, check in alterado com sucesso.', 'success')
+                return redirect(url_for('checkins.checkin_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = CheckInForm(obj=checkin)
+    return render_template('checkins/edit.html', form=form)
 
 
 @checkins.route('/<int:checkin_id>', methods=['GET', 'POST'])
@@ -75,18 +70,22 @@ def checkin_deactivate(checkin_id: int):
 @allowed_profile(['manager', 'admin'])
 def checkin_details(checkin_id: int):
     checkin = get(CheckIn, checkin_id)
-    form = CheckInGuestForm()
-    if form.validate_on_submit():
-        if checkin.is_active:
+    checkinguest = CheckInGuest(check_in=checkin_id)
+    if request.method == 'POST':
+        form = CheckInGuestForm(request.form, obj=checkinguest)
+        if form.validate():
             try:
-                data = get_formdata(form)
-                create(CheckInGuest, check_in=checkin_id, **data)
+                form.populate_obj(checkinguest)
+                validate_check_in_guest(checkinguest)
+                checkinguest.save()
                 flash('Yes, hóspede adicionado com sucesso.', 'success')
                 return redirect(url_for('checkins.checkin_details', checkin_id=checkin_id))
             except IntegrityError:
                 flash('Oops, hóspede já foi cadastrado.', 'warning')
-        else:
-            flash('Oops, não podes adicionar hóspedes num check-in inactivo.', 'danger')
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = CheckInGuestForm(obj=checkinguest)
     return render_template('checkins/details.html', checkin=checkin, form=form)
 
 

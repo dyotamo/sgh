@@ -55,9 +55,7 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-
         user = check_user(email=email, password=password)
-
         if user is None:
             flash('Credenciais inválidas.', 'warning')
         else:
@@ -82,6 +80,11 @@ def not_found(e):
 @app.errorhandler(403)
 def forbidden(e):
     return render_template('errors/403.html')
+
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return render_template('errors/405.html')
 
 
 @app.errorhandler(505)

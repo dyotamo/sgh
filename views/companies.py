@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from playhouse.flask_utils import object_list
 
@@ -25,34 +25,21 @@ def company_index():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def company_new():
-    form = CompanyForm()
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            validate_company(data)
-            create(Company, **data)
-            flash('Quarto cadastrado.', 'success')
-            return redirect(url_for('companies.company_index'))
-        except AttributeError as e:
-            flash(str(e), 'warning')
+    company = Company()
+    if request.method == 'POST':
+        form = CompanyForm(request.form, obj=company)
+        if form.validate():
+            try:
+                form.populate_obj(company)
+                validate_company(company)
+                company.save()
+                flash('Yes, empresa cadastrada com sucesso.', 'success')
+                return redirect(url_for('companies.company_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = CompanyForm(obj=company)
     return render_template('companies/new.html', form=form)
-
-
-@companies.route('/<int:company_id>/edit', methods=['GET', 'POST'])
-@login_required
-@allowed_profile(['receptionist', 'manager', 'admin'])
-def company_edit(company_id: int):
-    form = CompanyForm(obj=get(Company, company_id))
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            validate_company(data)
-            update(Company, company_id, **data)
-            flash('Quarto alterado.', 'success')
-            return redirect(url_for('companies.company_index'))
-        except AttributeError as e:
-            flash(str(e), 'warning')
-    return render_template('companies/edit.html', form=form)
 
 
 @companies.route('/<int:company_id>', methods=['GET'])
@@ -60,3 +47,24 @@ def company_edit(company_id: int):
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def company_details(company_id: int):
     return render_template('companies/details.html', company=get(Company, company_id))
+
+
+@companies.route('/<int:company_id>/edit', methods=['GET', 'POST'])
+@login_required
+@allowed_profile(['receptionist', 'manager', 'admin'])
+def company_edit(company_id: int):
+    company = get(Company, company_id)
+    if request.method == 'POST':
+        form = CompanyForm(request.form, obj=company)
+        if form.validate():
+            try:
+                form.populate_obj(company)
+                validate_company(company)
+                company.save()
+                flash('Yes, empresa alterada com sucesso.', 'success')
+                return redirect(url_for('companies.company_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = CompanyForm(obj=company)
+    return render_template('companies/edit.html', form=form)

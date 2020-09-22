@@ -5,7 +5,7 @@ from playhouse.db_url import connect
 from playhouse.signals import Model, pre_save
 from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash as gph
-from peewee import (SqliteDatabase, PostgresqlDatabase, CharField, DateTimeField,
+from peewee import (SqliteDatabase, PostgresqlDatabase, CharField, DateField,
                     ForeignKeyField, IntegerField, FloatField, BooleanField, CompositeKey)
 
 from utils.constants import (PROFILES, GENDERS, CATEGORIES,
@@ -26,24 +26,27 @@ class User(BaseModel, UserMixin):
     password = CharField(max_length=255, default=gph(
         'passwd'))  # TODO remove it later
 
-    created_at = DateTimeField(default=datetime.now())
-    updated_at = DateTimeField(null=True)
+    created_at = DateField(default=datetime.now())
+    updated_at = DateField(null=True)
     created_by = ForeignKeyField(
-        'self', column_name='created_by', null=True, backref='created')
+        'self', column_name='created_by', backref='created', null=True)
     updated_by = ForeignKeyField(
-        'self',  column_name='updated_by', null=True, backref='updated')
+        'self',  column_name='updated_by', backref='updated', null=True)
 
     def get_profile_label(self):
         return dict(PROFILES)[self.profile]
 
+    def __str__(self):
+        return self.email
+
 
 class Timestampable(BaseModel):
-    created_at = DateTimeField(null=True)
-    updated_at = DateTimeField(null=True)
-    created_by = ForeignKeyField(User, column_name='created_by',
-                                 null=True, backref='created')
-    updated_by = ForeignKeyField(User,  column_name='updated_by',
-                                 null=True, backref='updated')
+    created_at = DateField(null=True)
+    updated_at = DateField(null=True)
+    created_by = ForeignKeyField(
+        User, column_name='created_by', backref='created', null=True)
+    updated_by = ForeignKeyField(
+        User,  column_name='updated_by', backref='updated', null=True)
 
 
 class Company(Timestampable):
@@ -56,6 +59,9 @@ class Company(Timestampable):
     cellphone = CharField(max_length=50)
     email = CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class Guest(Timestampable):
     name = CharField(max_length=255)
@@ -64,11 +70,11 @@ class Guest(Timestampable):
     address = CharField(max_length=255)
     age = IntegerField()
     cellphone = CharField(max_length=50)
-    father_name = CharField(max_length=255)
-    mother_name = CharField(max_length=255)
-    marital_status = CharField(max_length=20)
+    father_name = CharField(max_length=255, null=True)
+    mother_name = CharField(max_length=255, null=True)
+    marital_status = CharField(max_length=20, choices=MARITAL_STATUSES)
     nationality = CharField(max_length=255)
-    company = ForeignKeyField(Company, null=True, backref='guests')
+    company = ForeignKeyField(Company, backref='guests', null=True)
     gender = CharField(max_length=10, choices=GENDERS)
 
     def get_company(self):
@@ -83,14 +89,20 @@ class Guest(Timestampable):
     def get_gender_label(self):
         return dict(GENDERS)[self.gender]
 
+    def __str__(self):
+        return self.name
+
 
 class RoomType(Timestampable):
     name = CharField(max_length=255, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Room(Timestampable):
     number = IntegerField(unique=True)
-    category = ForeignKeyField(RoomType, backref='rooms')
+    category = ForeignKeyField(RoomType, backref='rooms', null=True)
     status = CharField(max_length=50, choices=ROOM_STATUSES)
     daily_amount = FloatField()
 
@@ -100,29 +112,39 @@ class Room(Timestampable):
     def get_status_label(self):
         return dict(ROOM_STATUSES)[self.status]
 
+    def __str__(self):
+        return str(self.number)
+
 
 class Reservation(Timestampable):
-    check_in_time = DateTimeField()
-    check_out_time = DateTimeField()
+    check_in_time = DateField()
+    check_out_time = DateField()
     adult_number = IntegerField()
     children_number = IntegerField()
-    company = ForeignKeyField(Company, null=True, backref='reservations')
-    is_active = BooleanField(default=True)
+    company = ForeignKeyField(Company, backref='reservations', null=True)
+
+    def __str__(self):
+        return str(self.__dict__['__data__'])
 
 
 class CheckIn(Timestampable):
-    check_in_time = DateTimeField(default=datetime.now())
-    check_out_time = DateTimeField()
-    room = ForeignKeyField(Room, backref='checkins')
-    is_active = BooleanField(default=True)
+    check_in_time = DateField(default=datetime.now().date)
+    check_out_time = DateField()
+    room = ForeignKeyField(Room, backref='checkins', null=True)
+
+    def __str__(self):
+        return str(self.__dict__['__data__'])
 
 
 class CheckInGuest(BaseModel):
-    guest = ForeignKeyField(Guest, backref='checkinguests')
-    check_in = ForeignKeyField(CheckIn, backref='checkinguests')
+    guest = ForeignKeyField(Guest, backref='checkinguests', null=True)
+    check_in = ForeignKeyField(CheckIn, backref='checkinguests', null=True)
 
     class Meta:
         indexes = ((('guest', 'check_in'), True),)
+
+    def __str__(self):
+        return str(self.__dict__['__data__'])
 
 
 class Expense(Timestampable):
@@ -132,24 +154,36 @@ class Expense(Timestampable):
     amount = FloatField()
     check_in = ForeignKeyField(CheckIn, backref='expenses')
 
+    def __str__(self):
+        return str(self.__dict__['__data__'])
+
 
 class CheckOut(Timestampable):
-    out_date = DateTimeField()
+    out_date = DateField()
     expenses_total = FloatField()
     payment_type = CharField(max_length=50)
     dailt_total = IntegerField()
     check_in = ForeignKeyField(CheckIn, backref='checkout')
     is_active = BooleanField(default=True)
 
+    def __str__(self):
+        return str(self.__dict__['__data__'])
+
 
 class Invoice(Timestampable):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
 
+    def __str__(self):
+        return str(self.__dict__['__data__'])
+
 
 class Receipt(Timestampable):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
+
+    def __str__(self):
+        return str(self.__dict__['__data__'])
 
 
 if __name__ == "__main__":

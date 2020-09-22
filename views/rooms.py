@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from peewee import IntegrityError
 from playhouse.flask_utils import object_list
@@ -8,6 +8,7 @@ from dao import get_all, create, get, update
 from forms.room import RoomForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
+from utils.validators import validate_room
 
 
 rooms = Blueprint('rooms', __name__, url_prefix='/rooms')
@@ -25,15 +26,22 @@ def room_index():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def room_new():
-    form = RoomForm()
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            create(Room, **data)  # TODO validate if room number already exists
-            flash('Yes, quarto cadastrado com sucesso.', 'success')
-            return redirect(url_for('rooms.room_index'))
-        except IntegrityError:
-            flash('Oops, este número de quarto já está ocupado.', 'warning')
+    room = Room()
+    if request.method == 'POST':
+        form = RoomForm(request.form, obj=room)
+        if form.validate():
+            try:
+                form.populate_obj(room)
+                validate_room(room)
+                room.save()
+                flash('Yes, quarto cadastrado com sucesso.', 'success')
+                return redirect(url_for('rooms.room_index'))
+            except IntegrityError:
+                flash('Oops, este quarto já foi cadastrado.', 'warning')
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = RoomForm(obj=room)
     return render_template('rooms/new.html', form=form)
 
 
@@ -41,10 +49,18 @@ def room_new():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def room_edit(room_id: int):
-    form = RoomForm(obj=get(Room, room_id))
-    if form.validate_on_submit():
-        data = get_formdata(form)
-        update(Room, room_id, **data)
-        flash('Yes, quarto alterado com sucesso.', 'success')
-        return redirect(url_for('rooms.room_index'))
+    room = get(Room, room_id)
+    if request.method == 'POST':
+        form = RoomForm(request.form, obj=room)
+        if form.validate():
+            try:
+                form.populate_obj(room)
+                validate_room(room)
+                room.save()
+                flash('Yes, quarto alterado com sucesso.', 'success')
+                return redirect(url_for('rooms.room_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = RoomForm(obj=room)
     return render_template('rooms/edit.html', form=form)
