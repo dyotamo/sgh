@@ -10,7 +10,7 @@ def get(model, id: int):
 
 
 def get_all(model):
-    return model.select()
+    return model.select().order_by(model.id.desc())
 
 
 def get_random(model):
