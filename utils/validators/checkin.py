@@ -20,6 +20,9 @@ def valid_check_out_date(obj):
 
 def valid_available_room(obj):
     ''' verifica se o quarto está disponível '''
+    if obj.room is None:
+        raise AttributeError(
+            'Oops, o número de quarto deve ser informado.')
     room = get(Room, obj.room.id)
     if room.status != 'available':
         raise AttributeError(
