@@ -22,15 +22,7 @@ class User(BaseModel, UserMixin):
     name = CharField(max_length=255)
     email = CharField(max_length=255, unique=True)
     profile = CharField(max_length=50, choices=PROFILES)
-    password = CharField(max_length=255, default=gph(
-        'passwd'))  # TODO remove it later
-
-    created_at = DateField(default=datetime.now())
-    updated_at = DateField(null=True)
-    created_by = ForeignKeyField(
-        'self', column_name='created_by', backref='created', null=True)
-    updated_by = ForeignKeyField(
-        'self',  column_name='updated_by', backref='updated', null=True)
+    password = CharField(max_length=255, default=gph('passwd'))
 
     def get_profile_label(self):
         return dict(PROFILES)[self.profile]
@@ -39,16 +31,7 @@ class User(BaseModel, UserMixin):
         return self.email
 
 
-class Timestampable(BaseModel):
-    created_at = DateField(null=True)
-    updated_at = DateField(null=True)
-    created_by = ForeignKeyField(
-        User, column_name='created_by', backref='created', null=True)
-    updated_by = ForeignKeyField(
-        User,  column_name='updated_by', backref='updated', null=True)
-
-
-class Company(Timestampable):
+class Company(BaseModel):
     name = CharField(max_length=255)
     nuit = CharField(max_length=9)
     activity_branch = CharField(max_length=255)
@@ -62,7 +45,7 @@ class Company(Timestampable):
         return self.name
 
 
-class Guest(Timestampable):
+class Guest(BaseModel):
     name = CharField(max_length=255)
     id_type = CharField(max_length=10, choices=ID_TYPES)
     id_number = CharField(max_length=50)
@@ -92,14 +75,14 @@ class Guest(Timestampable):
         return self.name
 
 
-class RoomType(Timestampable):
+class RoomType(BaseModel):
     name = CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
 
 
-class Room(Timestampable):
+class Room(BaseModel):
     number = IntegerField(unique=True)
     category = ForeignKeyField(RoomType, backref='rooms', null=True)
     status = CharField(max_length=50, choices=ROOM_STATUSES)
@@ -115,7 +98,7 @@ class Room(Timestampable):
         return str(self.number)
 
 
-class Reservation(Timestampable):
+class Reservation(BaseModel):
     check_in_time = DateField()
     check_out_time = DateField()
     adult_number = IntegerField()
@@ -126,7 +109,7 @@ class Reservation(Timestampable):
         return str(self.__dict__['__data__'])
 
 
-class CheckIn(Timestampable):
+class CheckIn(BaseModel):
     check_in_time = DateField(default=datetime.now().date)
     check_out_time = DateField()
     room = ForeignKeyField(Room, backref='checkins', null=True)
@@ -146,7 +129,7 @@ class CheckInGuest(BaseModel):
         return str(self.__dict__['__data__'])
 
 
-class Expense(Timestampable):
+class Expense(BaseModel):
     category = CharField(max_length=50, choices=ROOM_CATEGORIES)
     description = CharField(max_length=255)
     quantity = IntegerField()
@@ -157,7 +140,7 @@ class Expense(Timestampable):
         return str(self.__dict__['__data__'])
 
 
-class CheckOut(Timestampable):
+class CheckOut(BaseModel):
     out_date = DateField()
     expenses_total = FloatField()
     payment_type = CharField(max_length=50)
@@ -169,7 +152,7 @@ class CheckOut(Timestampable):
         return str(self.__dict__['__data__'])
 
 
-class Invoice(Timestampable):
+class Invoice(BaseModel):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
 
@@ -177,7 +160,7 @@ class Invoice(Timestampable):
         return str(self.__dict__['__data__'])
 
 
-class Receipt(Timestampable):
+class Receipt(BaseModel):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
 
