@@ -2,7 +2,6 @@ from os import environ
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_minify import minify
 from flask_login import LoginManager, login_required, login_user, logout_user
-from flask_turbolinks import turbolinks
 
 from models import User
 from dao import get

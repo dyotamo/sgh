@@ -4,10 +4,11 @@ from playhouse.flask_utils import object_list
 from peewee import IntegrityError
 
 from models import User
-from dao import get_all, create, get, update
+from dao import get_all, get
 from forms.user import UserForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
+from utils.validators import validate_user
 
 
 users = Blueprint('users', __name__, url_prefix='/users')
@@ -31,11 +32,12 @@ def user_new():
         if form.validate():
             try:
                 form.populate_obj(user)
+                validate_user(user)
                 user.save()
                 flash('Yes, usuário cadastrado com sucesso.', 'success')
                 return redirect(url_for('users.user_index'))
-            except IntegrityError:
-                flash('Oops, este usuário já existe.', 'warning')
+            except AttributeError as e:
+                flash(str(e), 'warning')
     else:
         form = UserForm(obj=user)
     return render_template('users/new.html', form=form)

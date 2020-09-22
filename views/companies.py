@@ -3,7 +3,7 @@ from flask_login import login_required
 from playhouse.flask_utils import object_list
 
 from models import Company
-from dao import get_all, create, get, update
+from dao import get_all, get
 from forms.company import CompanyForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata

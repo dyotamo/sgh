@@ -4,7 +4,7 @@ from peewee import IntegrityError
 from playhouse.flask_utils import object_list
 
 from models import CheckIn, CheckInGuest
-from dao import get_all, create, get, update, delete
+from dao import get_all, get, delete
 from forms.checkin import CheckInForm, CheckInGuestForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
@@ -95,6 +95,5 @@ def checkin_details(checkin_id: int):
 def checkin_guest_remove(checkin_id: int):
     checkin_guest = get(CheckInGuest, request.form['checkin_guest_id'])
     delete(checkin_guest)
-    flash('Yes, {} removido com sucesso.'.format(
-        checkin_guest.guest.name), 'success')
+    flash(f'Yes, {checkin_guest.guest.name} removido com sucesso.', 'success')
     return redirect(url_for('checkins.checkin_details', checkin_id=checkin_id))

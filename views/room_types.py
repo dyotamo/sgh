@@ -3,7 +3,7 @@ from flask_login import login_required
 from peewee import IntegrityError
 
 from models import RoomType
-from dao import get_all, create, get, update
+from dao import get_all, get
 from forms.room_type import RoomTypeForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata

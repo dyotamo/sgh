@@ -4,7 +4,7 @@ from peewee import IntegrityError
 from playhouse.flask_utils import object_list
 
 from models import Reservation
-from dao import get_all, create, get, update
+from dao import get_all, get
 from forms.reservation import ReservationForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
