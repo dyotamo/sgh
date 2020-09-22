@@ -1,7 +1,11 @@
 from functools import wraps
 
+from werkzeug.security import check_password_hash
 from flask import abort
 from flask_login import current_user
+from peewee import DoesNotExist
+
+from models import User
 
 
 class allowed_profile:
@@ -15,3 +19,12 @@ class allowed_profile:
                 return func(*args, **kwargs)
             abort(403)
         return wrapped_func
+
+
+def check_user(email, password):
+    try:
+        user = User.get(User.email == email)
+        if check_password_hash(user.password, password):
+            return user
+    except DoesNotExist:
+        pass

@@ -1,5 +1,5 @@
-CATEGORIES = [('single', 'Solteiro'),
-              ('couple', 'Casal')]
+ROOM_CATEGORIES = [('single', 'Solteiro'),
+                   ('couple', 'Casal')]
 
 ROOM_STATUSES = [('available', 'Disponível'),
                  ('busy', 'Ocupado'),

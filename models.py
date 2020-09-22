@@ -2,13 +2,12 @@ from datetime import datetime
 from os import environ
 
 from playhouse.db_url import connect
-from playhouse.signals import Model, pre_save
-from flask_login import UserMixin, current_user
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash as gph
-from peewee import (SqliteDatabase, PostgresqlDatabase, CharField, DateField,
-                    ForeignKeyField, IntegerField, FloatField, BooleanField, CompositeKey)
+from peewee import (Model, CharField, DateField, ForeignKeyField,
+                    IntegerField, FloatField, BooleanField)
 
-from utils.constants import (PROFILES, GENDERS, CATEGORIES,
+from utils.constants import (PROFILES, GENDERS, ROOM_CATEGORIES,
                              ROOM_STATUSES, ID_TYPES, MARITAL_STATUSES)
 
 db = connect(environ.get('DATABASE_URL') or 'sqlite:///dev.db')
@@ -107,7 +106,7 @@ class Room(Timestampable):
     daily_amount = FloatField()
 
     def get_category_label(self):
-        return dict(CATEGORIES)[self.category]
+        return dict(ROOM_CATEGORIES)[self.category]
 
     def get_status_label(self):
         return dict(ROOM_STATUSES)[self.status]
@@ -148,7 +147,7 @@ class CheckInGuest(BaseModel):
 
 
 class Expense(Timestampable):
-    category = CharField(max_length=50, choices=CATEGORIES)
+    category = CharField(max_length=50, choices=ROOM_CATEGORIES)
     description = CharField(max_length=255)
     quantity = IntegerField()
     amount = FloatField()

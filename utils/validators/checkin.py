@@ -5,7 +5,7 @@ from models import Room
 
 
 def valid_check_in_date(obj):
-    ''' a data do check in não pode ser superior da data actual '''
+    ''' a data do check in não pode ser inferior da data actual '''
     if obj.check_in_time < datetime.now().date():
         raise AttributeError(
             'Oops, a data do Check-in não pode ser inferior a data actual.')

@@ -1,4 +1,5 @@
 from os import environ
+
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_minify import minify
 from flask_login import LoginManager, login_required, login_user, logout_user
@@ -6,8 +7,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user
 from models import User
 from dao import get
 from forms.login import LoginForm
-from utils.security import allowed_profile
-from services import check_user
+from utils.security import allowed_profile, check_user
 from views import rooms, companies, users, guests, room_types, reservations, checkins
 from template_filters import pretty_date
 from context_processors import pagination_processor
