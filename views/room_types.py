@@ -6,7 +6,6 @@ from models import RoomType
 from dao import get_all, get
 from forms.room_type import RoomTypeForm
 from utils.security import allowed_profile
-from utils.extra import get_formdata
 
 
 room_types = Blueprint('room_types', __name__, url_prefix='/room_types')
@@ -16,7 +15,8 @@ room_types = Blueprint('room_types', __name__, url_prefix='/room_types')
 @login_required
 @allowed_profile(['admin'])
 def room_type_index():
-    return render_template('room_types/index.html', room_types=get_all(RoomType))
+    return render_template('room_types/index.html',
+                           room_types=get_all(RoomType))
 
 
 @room_types.route('/new', methods=['GET', 'POST'])

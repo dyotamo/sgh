@@ -1,13 +1,11 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
-from peewee import IntegrityError
 from playhouse.flask_utils import object_list
 
 from models import Reservation
 from dao import get_all, get
 from forms.reservation import ReservationForm
 from utils.security import allowed_profile
-from utils.extra import get_formdata
 from utils.validators import validate_reservation
 
 
@@ -19,7 +17,8 @@ reservations = Blueprint('reservations', __name__, url_prefix='/reservations')
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def reservation_index():
     return object_list('reservations/index.html', query=get_all(Reservation),
-                       context_variable='reservations', paginate_by=7, check_bounds=False)
+                       context_variable='reservations', paginate_by=7,
+                       check_bounds=False)
 
 
 @reservations.route('/new', methods=['GET', 'POST'])

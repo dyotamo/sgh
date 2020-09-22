@@ -3,7 +3,7 @@ from random import choice
 from faker import Faker
 
 from models import User, Company, RoomType, Room
-from dao import create, get_random, get
+from dao import create, get_random
 from utils.constants import PROFILES, ROOM_STATUSES
 
 

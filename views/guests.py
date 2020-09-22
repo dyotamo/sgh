@@ -6,7 +6,6 @@ from models import Guest
 from dao import get_all, get
 from forms.guest import GuestForm
 from utils.security import allowed_profile
-from utils.extra import get_formdata
 from utils.validators import validate_guest
 
 
@@ -18,7 +17,8 @@ guests = Blueprint('guests', __name__, url_prefix='/guests')
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def guest_index():
     return object_list('guests/index.html', query=get_all(Guest),
-                       context_variable='guests', paginate_by=7, check_bounds=False)
+                       context_variable='guests', paginate_by=7,
+                       check_bounds=False)
 
 
 @guests.route('/<int:guest_id>', methods=['GET'])

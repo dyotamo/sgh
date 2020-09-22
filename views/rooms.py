@@ -7,7 +7,6 @@ from models import Room
 from dao import get_all, get
 from forms.room import RoomForm
 from utils.security import allowed_profile
-from utils.extra import get_formdata
 from utils.validators import validate_room
 
 
@@ -19,7 +18,8 @@ rooms = Blueprint('rooms', __name__, url_prefix='/rooms')
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def room_index():
     return object_list('rooms/index.html', query=get_all(Room),
-                       context_variable='rooms', paginate_by=7, check_bounds=False)
+                       context_variable='rooms', paginate_by=7,
+                       check_bounds=False)
 
 
 @rooms.route('/new', methods=['GET', 'POST'])

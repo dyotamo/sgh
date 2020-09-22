@@ -7,9 +7,8 @@ from models import CheckIn, CheckInGuest
 from dao import get_all, get, delete
 from forms.checkin import CheckInForm, CheckInGuestForm
 from utils.security import allowed_profile
-from utils.extra import get_formdata
-from utils.validators import (
-    validate_check_in_creation, validate_check_in_edit, validate_check_in_guest)
+from utils.validators import (validate_check_in_creation,
+                              validate_check_in_edit, validate_check_in_guest)
 
 
 checkins = Blueprint('checkins', __name__, url_prefix='/checkins')
@@ -20,7 +19,8 @@ checkins = Blueprint('checkins', __name__, url_prefix='/checkins')
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def checkin_index():
     return object_list('checkins/index.html', query=get_all(CheckIn),
-                       context_variable='checkins', paginate_by=7, check_bounds=False)
+                       context_variable='checkins', paginate_by=7,
+                       check_bounds=False)
 
 
 @checkins.route('/new', methods=['GET', 'POST'])
@@ -79,7 +79,8 @@ def checkin_details(checkin_id: int):
                 validate_check_in_guest(checkinguest)
                 checkinguest.save()
                 flash('Yes, hóspede adicionado com sucesso.', 'success')
-                return redirect(url_for('checkins.checkin_details', checkin_id=checkin_id))
+                return redirect(url_for('checkins.checkin_details',
+                                        checkin_id=checkin_id))
             except IntegrityError:
                 flash('Oops, hóspede já foi cadastrado.', 'warning')
             except AttributeError as e:
