@@ -6,7 +6,6 @@ from models import Company
 from dao import get_all, get
 from forms.company import CompanyForm
 from utils.security import allowed_profile
-from utils.extra import get_formdata
 from utils.validators import validate_company
 
 
@@ -18,7 +17,8 @@ companies = Blueprint('companies', __name__, url_prefix='/companies')
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def company_index():
     return object_list('companies/index.html', query=get_all(Company),
-                       context_variable='companies', paginate_by=7, check_bounds=False)
+                       context_variable='companies', paginate_by=7,
+                       check_bounds=False)
 
 
 @companies.route('/new', methods=['GET', 'POST'])
@@ -46,7 +46,8 @@ def company_new():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def company_details(company_id: int):
-    return render_template('companies/details.html', company=get(Company, company_id))
+    return render_template('companies/details.html',
+                           company=get(Company, company_id))
 
 
 @companies.route('/<int:company_id>/edit', methods=['GET', 'POST'])

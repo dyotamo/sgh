@@ -23,7 +23,7 @@ def valid_available_room(obj):
     room = get(Room, obj.room.id)
     if room.status != 'available':
         raise AttributeError(
-            f'Oops, o quarto {room.number} se encontra no etado {room.get_status_label()}.')
+            f'Oops, o quarto {room.number} não está disponível.')
 
 
 def valid_guest(obj):
@@ -34,7 +34,9 @@ def valid_guest(obj):
 
 def validate_check_in_creation(obj):
     ''' valida a criação do check in '''
-    for validator in [valid_check_in_date, valid_check_out_date, valid_available_room, ]:
+    validators = [valid_check_in_date,
+                  valid_check_out_date, valid_available_room]
+    for validator in validators:
         validator(obj)
 
 

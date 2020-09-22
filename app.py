@@ -8,9 +8,10 @@ from models import User
 from dao import get
 from forms.login import LoginForm
 from utils.security import allowed_profile, check_user
-from views import rooms, companies, users, guests, room_types, reservations, checkins
 from template_filters import pretty_date
 from context_processors import pagination_processor
+from views import (rooms, companies, users, guests,
+                   room_types, reservations, checkins)
 
 
 app = Flask(__name__)

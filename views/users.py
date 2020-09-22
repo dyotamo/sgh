@@ -1,13 +1,11 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from playhouse.flask_utils import object_list
-from peewee import IntegrityError
 
 from models import User
 from dao import get_all, get
 from forms.user import UserForm
 from utils.security import allowed_profile
-from utils.extra import get_formdata
 from utils.validators import validate_user
 
 
@@ -19,7 +17,8 @@ users = Blueprint('users', __name__, url_prefix='/users')
 @allowed_profile(['admin'])
 def user_index():
     return object_list('users/index.html', query=get_all(User),
-                       context_variable='users', paginate_by=7, check_bounds=False)
+                       context_variable='users', paginate_by=7,
+                       check_bounds=False)
 
 
 @users.route('/new', methods=['GET', 'POST'])
