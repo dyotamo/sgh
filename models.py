@@ -4,8 +4,8 @@ from os import environ
 from playhouse.db_url import connect
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash as gph
-from peewee import (Model, CharField, DateField, ForeignKeyField,
-                    IntegerField, FloatField, BooleanField)
+from peewee import (Model, CharField, DateField, DateTimeField,
+                    ForeignKeyField, IntegerField, FloatField, BooleanField)
 
 from utils.constants import (PROFILES, GENDERS, ROOM_CATEGORIES,
                              ROOM_STATUSES, ID_TYPES, MARITAL_STATUSES)
@@ -14,6 +14,8 @@ db = connect(environ.get('DATABASE_URL') or 'sqlite:///dev.db')
 
 
 class BaseModel(Model):
+    created_at = DateTimeField(default=datetime.now())
+
     class Meta:
         database = db
 
