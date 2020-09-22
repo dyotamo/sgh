@@ -5,8 +5,6 @@ verify_ssl = true
 
 [dev-packages]
 yapf = "*"
-pylint = "*"
-selenium = "*"
 faker = "*"
 
 [packages]

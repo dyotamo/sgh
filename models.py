@@ -105,17 +105,11 @@ class Reservation(BaseModel):
     children_number = IntegerField()
     company = ForeignKeyField(Company, backref='reservations', null=True)
 
-    def __str__(self):
-        return str(self.__dict__['__data__'])
-
 
 class CheckIn(BaseModel):
     check_in_time = DateField(default=datetime.now().date)
     check_out_time = DateField()
     room = ForeignKeyField(Room, backref='checkins', null=True)
-
-    def __str__(self):
-        return str(self.__dict__['__data__'])
 
 
 class CheckInGuest(BaseModel):
@@ -125,9 +119,6 @@ class CheckInGuest(BaseModel):
     class Meta:
         indexes = ((('guest', 'check_in'), True),)
 
-    def __str__(self):
-        return str(self.__dict__['__data__'])
-
 
 class Expense(BaseModel):
     category = CharField(max_length=50, choices=ROOM_CATEGORIES)
@@ -135,9 +126,6 @@ class Expense(BaseModel):
     quantity = IntegerField()
     amount = FloatField()
     check_in = ForeignKeyField(CheckIn, backref='expenses')
-
-    def __str__(self):
-        return str(self.__dict__['__data__'])
 
 
 class CheckOut(BaseModel):
@@ -148,29 +136,20 @@ class CheckOut(BaseModel):
     check_in = ForeignKeyField(CheckIn, backref='checkout')
     is_active = BooleanField(default=True)
 
-    def __str__(self):
-        return str(self.__dict__['__data__'])
-
 
 class Invoice(BaseModel):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
-
-    def __str__(self):
-        return str(self.__dict__['__data__'])
 
 
 class Receipt(BaseModel):
     is_active = BooleanField(default=True)
     is_duplicate = BooleanField(default=True)
 
-    def __str__(self):
-        return str(self.__dict__['__data__'])
-
 
 if __name__ == "__main__":
     db.create_tables([User, Guest, Company, RoomType, Room,
                       CheckIn, CheckInGuest, Reservation])
 
-    User.create(name='Dássone Yotamo', email='dyotamo@gmail.com',
-                profile='admin', password=gph('passwd'))
+    User.create(name='Dássone Yotamo',
+                email='dyotamo@gmail.com', profile='admin')
