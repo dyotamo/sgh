@@ -2,28 +2,28 @@ from datetime import date, timedelta, datetime
 from unittest import TestCase, main
 
 from models import Reservation, CheckIn, Guest, Company
-from utils.validators import (
-    validate_check_in_creation, validate_guest, validate_reservation, validate_company)
+from utils.validators import (validate_check_in_creation, validate_guest,
+                              validate_reservation, validate_company)
 
 
 class TestReservation(TestCase):
     def test_valid_reservation(self):
         today = datetime.now().date()
-        reservation = Reservation(
-            check_in_time=today + timedelta(days=1), check_out_time=today + timedelta(days=15))
+        reservation = Reservation(check_in_time=today + timedelta(days=1),
+                                  check_out_time=today + timedelta(days=15))
         validate_reservation(reservation)
 
     def test_invalid_reservation_1(self):
         today = datetime.now().date()
-        reservation = Reservation(
-            check_in_time=today - timedelta(days=1), check_out_time=today + timedelta(days=15))
+        reservation = Reservation(check_in_time=today - timedelta(days=1),
+                                  check_out_time=today + timedelta(days=15))
         with self.assertRaises(AttributeError):
             validate_reservation(reservation)
 
     def test_invalid_reservation_2(self):
         today = datetime.now().date()
-        reservation = Reservation(
-            check_in_time=today + timedelta(days=1), check_out_time=today - timedelta(days=15))
+        reservation = Reservation(check_in_time=today + timedelta(days=1),
+                                  check_out_time=today - timedelta(days=15))
         with self.assertRaises(AttributeError):
             validate_reservation(reservation)
 
@@ -48,14 +48,14 @@ class TestGuest(TestCase):
 
 class TestCompany(TestCase):
     def test_invalid_company(self):
-        company = Company(telephone='+258840000000',
-                          cellphone='+2588915652', fax='+2588915652', nuit='100000008')
+        company = Company(telephone='+258840000000', cellphone='+2588915652',
+                          fax='+2588915652', nuit='100000008')
         with self.assertRaises(AttributeError):
             validate_company(company)
 
     def test_valid_company(self):
-        company = Company(telephone='+258840000000',
-                          cellphone='+258840000000', fax='+258840000000', nuit='100000008')
+        company = Company(telephone='+258840000000', cellphone='+258840000000',
+                          fax='+258840000000', nuit='100000008')
         validate_company(company)
 
 

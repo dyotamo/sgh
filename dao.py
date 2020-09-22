@@ -1,5 +1,5 @@
 from flask import abort
-from peewee import Model, ModelSelect, fn
+from peewee import fn
 
 
 def get(model, id: int):
@@ -28,5 +28,5 @@ def create(model, **kwargs):
     model.create(**kwargs)
 
 
-def delete(obj: Model):
+def delete(obj):
     obj.delete_instance()
