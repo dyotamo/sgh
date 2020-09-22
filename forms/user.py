@@ -1,11 +1,6 @@
-from flask_wtf import FlaskForm
-from wtforms import TextField, SelectField
-
-from utils.validators import REQUIRED, EMAIL
-from utils.constants import PROFILES
+from wtfpeewee.orm import model_form
+from models import User
 
 
-class UserForm(FlaskForm):
-    name = TextField('Nome', validators=[REQUIRED])
-    email = TextField('Email', validators=[REQUIRED, EMAIL])
-    profile = SelectField('Perfil', validators=[REQUIRED], choices=PROFILES)
+UserForm = model_form(User, field_args={'name': dict(
+    label='Nome'), 'profile': dict(label='Perfil')})

@@ -1,14 +1,13 @@
 from os import environ
+
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_minify import minify
 from flask_login import LoginManager, login_required, login_user, logout_user
-from flask_turbolinks import turbolinks
 
 from models import User
 from dao import get
 from forms.login import LoginForm
-from utils.security import allowed_profile
-from services import check_user
+from utils.security import allowed_profile, check_user
 from views import rooms, companies, users, guests, room_types, reservations, checkins
 from template_filters import pretty_date
 from context_processors import pagination_processor
@@ -55,9 +54,7 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-
         user = check_user(email=email, password=password)
-
         if user is None:
             flash('Credenciais inválidas.', 'warning')
         else:
@@ -82,6 +79,11 @@ def not_found(e):
 @app.errorhandler(403)
 def forbidden(e):
     return render_template('errors/403.html')
+
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return render_template('errors/405.html')
 
 
 @app.errorhandler(505)

@@ -4,12 +4,11 @@ from peewee import IntegrityError
 from playhouse.flask_utils import object_list
 
 from models import Reservation
-from dao import get_all, create, get, update
+from dao import get_all, get
 from forms.reservation import ReservationForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
 from utils.validators import validate_reservation
-from services import toogle_activation
 
 
 reservations = Blueprint('reservations', __name__, url_prefix='/reservations')
@@ -27,16 +26,20 @@ def reservation_index():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def reservation_new():
-    form = ReservationForm()
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            validate_reservation(data)
-            create(Reservation, **data)
-            flash('Yes, reserva cadastrado com sucesso.', 'success')
-            return redirect(url_for('reservations.reservation_index'))
-        except AttributeError as e:
-            flash(str(e), 'warning')
+    reservation = Reservation()
+    if request.method == 'POST':
+        form = ReservationForm(request.form, obj=reservation)
+        if form.validate():
+            try:
+                form.populate_obj(reservation)
+                validate_reservation(reservation)
+                reservation.save()
+                flash('Yes, reserva cadastrado com sucesso.', 'success')
+                return redirect(url_for('reservations.reservation_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = ReservationForm(obj=reservation)
     return render_template('reservations/new.html', form=form)
 
 
@@ -44,27 +47,18 @@ def reservation_new():
 @login_required
 @allowed_profile(['receptionist', 'manager', 'admin'])
 def reservation_edit(reservation_id: int):
-    form = ReservationForm(obj=get(Reservation, reservation_id))
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            validate_reservation(data)
-            update(Reservation, reservation_id, **data)
-            flash('Yes, reserva alterado com sucesso.', 'success')
-            return redirect(url_for('reservations.reservation_index'))
-        except AttributeError as e:
-            flash(str(e), 'warning')
-    return render_template('reservations/edit.html', form=form)
-
-
-@reservations.route('/<int:reservation_id>/deactivate', methods=['GET', 'POST'])
-@login_required
-@allowed_profile(['manager', 'admin'])
-def reservation_deactivate(reservation_id: int):
     reservation = get(Reservation, reservation_id)
     if request.method == 'POST':
-        toogle_activation(reservation)
-        flash('Yes, reserva {} com sucesso.'.format(
-            'reactivada' if reservation.is_active else 'desactivada'), 'success')
-        return redirect(url_for('reservations.reservation_index'))
-    return render_template('reservations/deactivate.html', reservation=reservation)
+        form = ReservationForm(request.form, obj=reservation)
+        if form.validate():
+            try:
+                form.populate_obj(reservation)
+                validate_reservation(reservation)
+                reservation.save()
+                flash('Yes, reserva alterada com sucesso.', 'success')
+                return redirect(url_for('reservations.reservation_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = ReservationForm(obj=reservation)
+    return render_template('reservations/edit.html', form=form)

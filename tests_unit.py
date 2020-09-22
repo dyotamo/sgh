@@ -1,33 +1,62 @@
-from datetime import date
+from datetime import date, timedelta, datetime
 from unittest import TestCase, main
-from utils.validators import (validate_check_in, validate_guest,
-                              validate_reservation, validate_check_in)
+
+from models import Reservation, CheckIn, Guest, Company
+from utils.validators import (
+    validate_check_in_creation, validate_guest, validate_reservation, validate_company)
 
 
-class TestValidators(TestCase):
+class TestReservation(TestCase):
+    def test_valid_reservation(self):
+        today = datetime.now().date()
+        reservation = Reservation(
+            check_in_time=today + timedelta(days=1), check_out_time=today + timedelta(days=15))
+        validate_reservation(reservation)
+
+    def test_invalid_reservation_1(self):
+        today = datetime.now().date()
+        reservation = Reservation(
+            check_in_time=today - timedelta(days=1), check_out_time=today + timedelta(days=15))
+        with self.assertRaises(AttributeError):
+            validate_reservation(reservation)
+
+    def test_invalid_reservation_2(self):
+        today = datetime.now().date()
+        reservation = Reservation(
+            check_in_time=today + timedelta(days=1), check_out_time=today - timedelta(days=15))
+        with self.assertRaises(AttributeError):
+            validate_reservation(reservation)
+
+
+class TestCheckIn(TestCase):
     def test_invalid_check_in(self):
+        checkin = CheckIn(check_out_time=date(2020, 9, 5))
         with self.assertRaises(AttributeError):
-            validate_check_in(dict(check_out_time=date(2020, 9, 5)))
+            validate_check_in_creation(checkin)
 
-    def test_invalid_reservation(self):
-        with self.assertRaises(AttributeError):
-            validate_reservation(dict(check_out_time=date(2020, 8, 4)))
 
+class TestGuest(TestCase):
     def test_invalid_guest(self):
+        guest = Guest(cellphone='+2588915652')
         with self.assertRaises(AttributeError):
-            validate_guest(dict(cellphone='+2588915652'))
+            validate_guest(guest)
 
     def test_valid_guest(self):
-        validate_guest(dict(cellphone='+258840256000'))
+        guest = Guest(cellphone='+258840256000')
+        validate_guest(guest)
 
+
+class TestCompany(TestCase):
     def test_invalid_company(self):
+        company = Company(telephone='+258840000000',
+                          cellphone='+2588915652', fax='+2588915652', nuit='100000008')
         with self.assertRaises(AttributeError):
-            validate_guest(dict(telephone='+258840000000',
-                                cellphone='+2588915652', fax='+2588915652', nuit='100000008'))
+            validate_company(company)
 
     def test_valid_company(self):
-        validate_guest(dict(telephone='+258840000000',
-                            cellphone='+258840000000', fax='+258840000000', nuit='100000008'))
+        company = Company(telephone='+258840000000',
+                          cellphone='+258840000000', fax='+258840000000', nuit='100000008')
+        validate_company(company)
 
 
 if __name__ == '__main__':

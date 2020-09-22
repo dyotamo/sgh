@@ -1,12 +1,14 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from playhouse.flask_utils import object_list
+from peewee import IntegrityError
 
 from models import User
-from dao import get_all, create, get, update
+from dao import get_all, get
 from forms.user import UserForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
+from utils.validators import validate_user
 
 
 users = Blueprint('users', __name__, url_prefix='/users')
@@ -24,12 +26,20 @@ def user_index():
 @login_required
 @allowed_profile(['admin'])
 def user_new():
-    form = UserForm()
-    if form.validate_on_submit():
-        data = get_formdata(form)
-        create(User, **data)
-        flash('Yes, usuário cadastrado com sucesso.', 'success')
-        return redirect(url_for('users.user_index'))
+    user = User()
+    if request.method == 'POST':
+        form = UserForm(request.form, obj=user)
+        if form.validate():
+            try:
+                form.populate_obj(user)
+                validate_user(user)
+                user.save()
+                flash('Yes, usuário cadastrado com sucesso.', 'success')
+                return redirect(url_for('users.user_index'))
+            except AttributeError as e:
+                flash(str(e), 'warning')
+    else:
+        form = UserForm(obj=user)
     return render_template('users/new.html', form=form)
 
 
@@ -37,11 +47,14 @@ def user_new():
 @login_required
 @allowed_profile(['admin'])
 def user_edit(user_id: int):
-    print(user_id)
-    form = UserForm(obj=get(User, user_id))
-    if form.validate_on_submit():
-        data = get_formdata(form)
-        update(User, user_id, **data)
-        flash('Yes, usuário alterado com sucesso.', 'success')
-        return redirect(url_for('users.user_index'))
+    user = get(User, user_id)
+    if request.method == 'POST':
+        form = UserForm(request.form, obj=user)
+        if form.validate():
+            form.populate_obj(user)
+            user.save()
+            flash('Yes, usuário alterado com sucesso.', 'success')
+            return redirect(url_for('users.user_index'))
+    else:
+        form = UserForm(obj=user)
     return render_template('users/edit.html', form=form)

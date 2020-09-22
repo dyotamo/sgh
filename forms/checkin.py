@@ -1,16 +1,9 @@
-from flask_wtf import FlaskForm
-from wtforms import IntegerField, DateField, SelectField
-
-from models import Room, Guest
-from utils.validators import REQUIRED
-from utils.extra import get_model_tuple
+from wtfpeewee.orm import model_form
+from models import CheckIn, CheckInGuest
 
 
-class CheckInForm(FlaskForm):
-    room = SelectField('Quarto', choices=get_model_tuple(Room, 'number'))
-    check_out_time = DateField('Data do Check Out', validators=[
-                               REQUIRED], format='%d/%m/%Y')
+CheckInForm = model_form(CheckIn, field_args={'room': dict(label='Quarto'),
+                                              'check_out_time': dict(label='Data do Check-out')})
 
-
-class CheckInGuestForm(FlaskForm):
-    guest = SelectField('Hóspede', choices=get_model_tuple(Guest))
+CheckInGuestForm = model_form(CheckInGuest, field_args={
+                              'guest': dict(label='Hóspede')})

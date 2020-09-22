@@ -9,9 +9,8 @@
         <table class="table table-borderless">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Check In</th>
-                    <th scope="col">Check Out</th>
+                    <th scope="col">Data do Check In</th>
+                    <th scope="col">Data do Check Out</th>
                     <th scope="col">Adultos</th>
                     <th scope="col">Crianças</th>
                     <th scope="col">Em nome de</th>
@@ -21,26 +20,13 @@
             <tbody>
                 {% for reservation in reservations %}
                 <tr>
-                    {% if reservation.is_active %}
-                    <td><img src="{{ url_for('static', filename='active.png') }}" /></td>
-                    {% else %}
-                    <td><img src="{{ url_for('static', filename='inactive.png') }}" /></td>
-                    {% endif %}
                     <td>{{ reservation.check_in_time | pretty_date }}</td>
                     <td>{{ reservation.check_out_time | pretty_date}}</td>
                     <td>{{ reservation.adult_number }}</td>
                     <td>{{ reservation.children_number }}</td>
-                    <td>{{ reservation.company.name }}</td>
+                    <td>{{ reservation.company.name or '-' }}</td>
                     <td>
-                        {% if reservation.is_active %}
-                        <a href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}"
-                            class="btn btn-warning btn-sm">Inativar</a>
-                        {% else %}
-                        <a href="{{ url_for('reservations.reservation_deactivate', reservation_id=reservation.id) }}"
-                            class="btn btn-success btn-sm">Reactivar</a>
-                        {% endif %}
-                    </td>
-                    <td><a href="{{ url_for('reservations.reservation_edit', reservation_id=reservation.id) }}"
+                        <a href="{{ url_for('reservations.reservation_edit', reservation_id=reservation.id) }}"
                             class="btn btn-primary btn-sm">Editar</a>
                     </td>
                 </tr>

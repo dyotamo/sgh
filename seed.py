@@ -18,7 +18,7 @@ def _create_users(size: int):
 
 def _create_companies(size: int):
     for _ in range(size):
-        create(Company, name=fake.company(), nuit='100000008',
+        create(Company, name=fake.company(), nuit='100000000',
                activity_branch=fake.bs().title(), address=fake.address(),
                telephone=fake.phone_number(), fax=fake.phone_number(),
                cellphone=fake.phone_number(), email=fake.email())
@@ -34,11 +34,11 @@ def _create_room_types():
 def _create_rooms(size: int):
     for number in range(size):
         Room.create(number=number, category=get_random(RoomType),
-                    status=choice(ROOM_STATUSES)[0], daily_amount=1500)
+                    status=choice(ROOM_STATUSES)[0], daily_amount=7500)
 
 
 if __name__ == '__main__':
-    _create_users(25)
-    _create_companies(50)
+    _create_users(5)
+    _create_companies(3)
     _create_room_types()
-    _create_rooms(250)
+    _create_rooms(10)

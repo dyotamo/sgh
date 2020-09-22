@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required
 from peewee import IntegrityError
 
 from models import RoomType
-from dao import get_all, create, get, update
+from dao import get_all, get
 from forms.room_type import RoomTypeForm
 from utils.security import allowed_profile
 from utils.extra import get_formdata
@@ -23,15 +23,19 @@ def room_type_index():
 @login_required
 @allowed_profile(['admin'])
 def room_type_new():
-    form = RoomTypeForm()
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            create(RoomType, **data)
-            flash('Yes, tipo de quarto cadastrado com sucesso.', 'success')
-            return redirect(url_for('room_types.room_type_index'))
-        except IntegrityError:
-            flash('Oops, este tipo de quarto já existe.', 'warning')
+    room_type = RoomType()
+    if request.method == 'POST':
+        form = RoomTypeForm(request.form, obj=room_type)
+        if form.validate():
+            try:
+                form.populate_obj(room_type)
+                room_type.save()
+                flash('Yes, tipo de quarto cadastrado com sucesso.', 'success')
+                return redirect(url_for('room_types.room_type_index'))
+            except IntegrityError:
+                flash('Oops, este tipo de quarto já existe.', 'warning')
+    else:
+        form = RoomTypeForm(obj=room_type)
     return render_template('room_types/new.html', form=form)
 
 
@@ -39,13 +43,17 @@ def room_type_new():
 @login_required
 @allowed_profile(['admin'])
 def room_type_edit(room_type_id: int):
-    form = RoomTypeForm(obj=get(RoomType, room_type_id))
-    if form.validate_on_submit():
-        try:
-            data = get_formdata(form)
-            update(RoomType, room_type_id, **data)
-            flash('Yes, tipo de quarto alterado com sucesso.', 'success')
-            return redirect(url_for('room_types.room_type_index'))
-        except IntegrityError:
-            flash('Oops, este tipo de quarto já existe.', 'warning')
+    room_type = get(RoomType, room_type_id)
+    if request.method == 'POST':
+        form = RoomTypeForm(request.form, obj=room_type)
+        if form.validate():
+            try:
+                form.populate_obj(room_type)
+                room_type.save()
+                flash('Yes, tipo de quarto alterado com sucesso.', 'success')
+                return redirect(url_for('room_types.room_type_index'))
+            except IntegrityError:
+                flash('Oops, este tipo de quarto já existe.', 'warning')
+    else:
+        form = RoomTypeForm(obj=room_type)
     return render_template('room_types/edit.html', form=form)

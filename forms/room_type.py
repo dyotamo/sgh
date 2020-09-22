@@ -1,8 +1,5 @@
-from flask_wtf import FlaskForm
-from wtforms import TextField
-
-from utils.validators import REQUIRED
+from wtfpeewee.orm import model_form
+from models import RoomType
 
 
-class RoomTypeForm(FlaskForm):
-    name = TextField('Nome', validators=[REQUIRED])
+RoomTypeForm = model_form(RoomType, field_args={'name': dict(label='Tipo')})

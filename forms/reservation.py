@@ -1,16 +1,9 @@
-from flask_wtf import FlaskForm
-from wtforms import IntegerField, DateField, SelectField
-
-from models import Company
-from utils.validators import REQUIRED
-from utils.extra import get_model_tuple
+from wtfpeewee.orm import model_form
+from models import Reservation
 
 
-class ReservationForm(FlaskForm):
-    adult_number = IntegerField('Adultos', validators=[REQUIRED])
-    children_number = IntegerField('Crianças', validators=[REQUIRED])
-    company = SelectField('Em nome de', choices=get_model_tuple(Company))
-    check_in_time = DateField('Data do Check In', validators=[
-                              REQUIRED], format='%d/%m/%Y')
-    check_out_time = DateField('Data do Check Out', validators=[
-                               REQUIRED], format='%d/%m/%Y')
+ReservationForm = model_form(Reservation, field_args={'check_in_time': dict(label='Data do Check-in'),
+                                                      'check_out_time': dict(label='Data do Check-out'),
+                                                      'adult_number': dict(label='Adultos'),
+                                                      'children_number': dict(label='Crianças'),
+                                                      'company': dict(label='Em nome de')})

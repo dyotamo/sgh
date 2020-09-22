@@ -18,7 +18,7 @@
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <th scope="row">{{ user.name }}</th>
+                    <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.get_profile_label() }}</td>
                     <td><a href="{{ url_for('users.user_edit', user_id=user.id) }}" class="btn btn-primary btn-sm">Editar</a>

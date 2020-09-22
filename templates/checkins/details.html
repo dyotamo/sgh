@@ -32,7 +32,6 @@
 
     {% from "helpers/_form_helpers.html" import render_field %}
     <form method="POST" action="{{ url_for('checkins.checkin_details', checkin_id=checkin.id) }}">
-        {{ form.csrf_token }}
         <div class="form-group">
             {{ render_field(form.guest, class="form-control selectpicker", data_live_search="true") }}
         </div>
